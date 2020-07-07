@@ -1,6 +1,6 @@
 package com.borikov.day6.entity;
 
-import com.borikov.day6.generator.IdGenerator;
+import com.borikov.day6.util.IdGenerator;
 
 import java.util.Collections;
 import java.util.List;

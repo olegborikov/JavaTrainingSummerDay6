@@ -1,4 +1,4 @@
-package com.borikov.day6.generator;
+package com.borikov.day6.util;
 
 public class IdGenerator {
     private static final long MIN_ID = 1;

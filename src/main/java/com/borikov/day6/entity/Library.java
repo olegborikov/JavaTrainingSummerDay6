@@ -1,20 +1,18 @@
-package com.borikov.day6.repo;
-
-import com.borikov.day6.entity.Book;
+package com.borikov.day6.entity;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BookRepo {
-    private static final BookRepo INSTANCE = new BookRepo();
-    private final List<Book> books = new ArrayList<Book>();
+public class Library {
+    private static Library instance = new Library();
+    private List<Book> books = new ArrayList<>();
 
-    private BookRepo() {
+    private Library() {
     }
 
-    public static BookRepo getInstance() {
-        return INSTANCE;
+    public static Library getInstance() {
+        return instance;
     }
 
     public boolean add(Book book) {
