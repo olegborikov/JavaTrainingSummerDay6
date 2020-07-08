@@ -6,20 +6,20 @@ import com.borikov.day6.exception.IncorrectDataException;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookListDao {
+public interface LibraryDao {
     void addBook(Book book) throws IncorrectDataException;
 
     void removeBook(Book book) throws IncorrectDataException;
 
-    Optional<Book> findById(long id);
+    Optional<Book> findBooksById(long id);
 
-    List<Book> findByName(String name);
+    List<Book> findBooksByName(String name);
 
-    List<Book> findByPrice(Double price);
+    List<Book> findBooksByPrice(Double price);
 
-    List<Book> findByPublishingHouse(String publishingHouse);
+    List<Book> findBooksByPublishingHouse(String publishingHouse);
 
-    List<Book> findByAuthor(String author);
+    List<Book> findBooksByAuthor(String author);
 
     List<Book> sortBooksById();
 

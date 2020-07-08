@@ -1,6 +1,6 @@
 package com.borikov.day6.dao.impl;
 
-import com.borikov.day6.dao.BookListDao;
+import com.borikov.day6.dao.LibraryDao;
 import com.borikov.day6.entity.Book;
 import com.borikov.day6.entity.Library;
 import com.borikov.day6.exception.IncorrectDataException;
@@ -10,61 +10,66 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class BookListDaoImpl implements BookListDao {
+public class LibraryDaoImpl implements LibraryDao {
     @Override
     public void addBook(Book book) throws IncorrectDataException {
+        if (isBookAdded(book)) {
+            throw new IncorrectDataException("element already added");
+        }
         Library.getInstance().add(book);
     }
 
     @Override
     public void removeBook(Book book) throws IncorrectDataException {
-        Library.getInstance().remove(book);
+        if (!Library.getInstance().remove(book)) {
+            throw new IncorrectDataException("no such element");
+        }
     }
 
     @Override
-    public Optional<Book> findById(long id) {
+    public Optional<Book> findBooksById(long id) {
         List<Book> books = Library.getInstance().get();
-        Optional<Book> filterBook = books.stream()
+        Optional<Book> filteredBooks = books.stream()
                 .filter(book -> book.getBookId() == id)
                 .findFirst();
-        return filterBook;
+        return filteredBooks;
     }
 
     @Override
-    public List<Book> findByName(String name) {
+    public List<Book> findBooksByName(String name) {
         List<Book> books = Library.getInstance().get();
-        List<Book> filterBooks = books.stream()
+        List<Book> filteredBooks = books.stream()
                 .filter(book -> book.getName().equals(name))
                 .collect(Collectors.toList());
-        return filterBooks;
+        return filteredBooks;
     }
 
     @Override
-    public List<Book> findByPrice(Double price) {
+    public List<Book> findBooksByPrice(Double price) {
         List<Book> books = Library.getInstance().get();
-        List<Book> filterBooks = books.stream()
+        List<Book> filteredBooks = books.stream()
                 .filter(book -> book.getPrice() == price)
                 .collect(Collectors.toList());
-        return filterBooks;
+        return filteredBooks;
     }
 
     @Override
-    public List<Book> findByPublishingHouse(String publishingHouse) {
+    public List<Book> findBooksByPublishingHouse(String publishingHouse) {
         List<Book> books = Library.getInstance().get();
-        List<Book> filterBooks = books.stream()
+        List<Book> filteredBooks = books.stream()
                 .filter(book -> book.getPublishingHouse().equals(publishingHouse))
                 .collect(Collectors.toList());
-        return filterBooks;
+        return filteredBooks;
     }
 
     @Override
-    public List<Book> findByAuthor(String author) {
+    public List<Book> findBooksByAuthor(String author) {
         List<Book> books = Library.getInstance().get();
-        List<Book> filterBooks = books.stream()
+        List<Book> filteredBooks = books.stream()
                 .filter(book -> book.getAuthors().stream()
                         .anyMatch(currentAuthor -> currentAuthor.equals(author)))
                 .collect(Collectors.toList());
-        return filterBooks;
+        return filteredBooks;
     }
 
     @Override
@@ -110,5 +115,11 @@ public class BookListDaoImpl implements BookListDao {
                 .sorted(Comparator.comparing(book -> book.getAuthors().size()))
                 .collect(Collectors.toList());
         return sortedBooks;
+    }
+
+    private boolean isBookAdded(Book book) {
+        boolean result = Library.getInstance().get().stream()
+                .anyMatch(currentBook -> currentBook.equals(book));
+        return result;
     }
 }
