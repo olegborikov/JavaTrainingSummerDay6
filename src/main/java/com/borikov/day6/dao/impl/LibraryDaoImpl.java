@@ -27,7 +27,7 @@ public class LibraryDaoImpl implements LibraryDao {
     }
 
     @Override
-    public Optional<Book> findBooksById(long id) {
+    public Optional<Book> findBookById(long id) {
         List<Book> books = Library.getInstance().get();
         Optional<Book> filteredBooks = books.stream()
                 .filter(book -> book.getBookId() == id)

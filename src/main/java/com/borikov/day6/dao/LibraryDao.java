@@ -11,7 +11,7 @@ public interface LibraryDao {
 
     void removeBook(Book book) throws IncorrectDataException;
 
-    Optional<Book> findBooksById(long id);
+    Optional<Book> findBookById(long id);
 
     List<Book> findBooksByName(String name);
 
