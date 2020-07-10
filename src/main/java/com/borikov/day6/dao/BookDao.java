@@ -1,15 +1,17 @@
 package com.borikov.day6.dao;
 
 import com.borikov.day6.entity.Book;
-import com.borikov.day6.exception.IncorrectDataException;
+import com.borikov.day6.exception.DaoException;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface LibraryDao {
-    void addBook(Book book) throws IncorrectDataException;
+public interface BookDao {
+    void addBook(Book book) throws DaoException;
 
-    void removeBook(Book book) throws IncorrectDataException;
+    void removeBook(Book book) throws DaoException;
+
+    List<Book> getAllBooks();
 
     Optional<Book> findBookById(long id);
 

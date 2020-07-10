@@ -1,29 +1,35 @@
 package com.borikov.day6.dao.impl;
 
-import com.borikov.day6.dao.LibraryDao;
+import com.borikov.day6.dao.BookDao;
 import com.borikov.day6.entity.Book;
 import com.borikov.day6.entity.Library;
-import com.borikov.day6.exception.IncorrectDataException;
+import com.borikov.day6.exception.DaoException;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class LibraryDaoImpl implements LibraryDao {
+public class BookDaoImpl implements BookDao {
     @Override
-    public void addBook(Book book) throws IncorrectDataException {
+    public void addBook(Book book) throws DaoException {
         if (isBookAdded(book)) {
-            throw new IncorrectDataException("element already added");
+            throw new DaoException("Book already in library");
         }
         Library.getInstance().add(book);
     }
 
     @Override
-    public void removeBook(Book book) throws IncorrectDataException {
+    public void removeBook(Book book) throws DaoException {
         if (!Library.getInstance().remove(book)) {
-            throw new IncorrectDataException("no such element");
+            throw new DaoException("No such book in library");
         }
+    }
+
+    @Override
+    public List<Book> getAllBooks() {
+        List<Book> books = Library.getInstance().get();
+        return books;
     }
 
     @Override

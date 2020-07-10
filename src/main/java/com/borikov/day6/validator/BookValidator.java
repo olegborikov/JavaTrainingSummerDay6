@@ -7,6 +7,10 @@ public class BookValidator {
     private static final double MAX_PRICE = 1000.0;
     private static final long MIN_ID = 1;
     private static final long MAX_ID = 100_000;
+    private static final long MAX_NAME_LENGTH = 30;
+    private static final long MAX_PUBLISHING_HOUSE_LENGTH = 40;
+    private static final long MAX_AUTHOR_LENGTH = 20;
+    private static final long MIN_LENGTH = 1;
 
     public boolean isIdCorrect(long id) {
         boolean result = true;
@@ -18,7 +22,8 @@ public class BookValidator {
 
     public boolean isNameCorrect(String name) {
         boolean result = true;
-        if (name == null || name.isBlank()) {
+        if (name == null || name.isBlank() ||
+                name.length() < MIN_LENGTH || name.length() > MAX_NAME_LENGTH) {
             result = false;
         }
         return result;
@@ -34,7 +39,9 @@ public class BookValidator {
 
     public boolean isPublishingHouseCorrect(String publishingHouse) {
         boolean result = true;
-        if (publishingHouse == null || publishingHouse.isBlank()) {
+        if (publishingHouse == null || publishingHouse.isBlank() ||
+                publishingHouse.length() < MIN_LENGTH ||
+                publishingHouse.length() > MAX_PUBLISHING_HOUSE_LENGTH) {
             result = false;
         }
         return result;
@@ -51,7 +58,8 @@ public class BookValidator {
 
     public boolean isAuthorCorrect(String author) {
         boolean result = true;
-        if (author == null || author.isBlank()) {
+        if (author == null || author.isBlank() ||
+                author.length() < MIN_LENGTH || author.length() > MAX_AUTHOR_LENGTH) {
             result = false;
         }
         return result;

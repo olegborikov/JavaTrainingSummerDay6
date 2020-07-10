@@ -58,8 +58,9 @@ public class BookValidatorTest {
     public Object[][] createIsNameCorrectPositiveData() {
         return new Object[][]{
                 {"Я, ты"},
-                {"War and peace part 1?"},
-                {"Я"}
+                {"War and peace part 1"},
+                {"Я"},
+                {"\"Любовь\" - this is ... or not?"}
         };
     }
 
@@ -74,6 +75,7 @@ public class BookValidatorTest {
         return new Object[][]{
                 {""},
                 {"    "},
+                {"\"Любовь\" - this is ... or not? "},
                 {null}
         };
     }
@@ -119,7 +121,9 @@ public class BookValidatorTest {
         return new Object[][]{
                 {"\"Минск\" печать"},
                 {"Московская печатная студия"},
-                {"Москва\\Питер"}
+                {"Москва\\Питер"},
+                {"Я"},
+                {"Минское. Независимое. Печатное. агенство"}
         };
     }
 
@@ -134,7 +138,8 @@ public class BookValidatorTest {
         return new Object[][]{
                 {"   "},
                 {null},
-                {""}
+                {""},
+                {"Минское государственное независимое печатное агенство"}
         };
     }
 
@@ -151,9 +156,13 @@ public class BookValidatorTest {
         authors1.add("Oleg");
         List<String> authors2 = new ArrayList<>();
         authors2.add("Alex");
+        authors2.add("Дунин-Марцинкевич В.");
+        List<String> authors3 = new ArrayList<>();
+        authors3.add("Я");
         return new Object[][]{
                 {authors1},
-                {authors2}
+                {authors2},
+                {authors3}
         };
     }
 
@@ -169,9 +178,15 @@ public class BookValidatorTest {
         authors1.add(null);
         authors1.add("Oleg");
         List<String> authors2 = new ArrayList<>();
+        List<String> authors3 = new ArrayList<>();
+        authors3.add("");
+        List<String> authors4 = new ArrayList<>();
+        authors4.add("Дунин-Марцинкевич Викентий");
         return new Object[][]{
                 {authors1},
                 {authors2},
+                {authors3},
+                {authors4},
                 {null}
         };
     }
@@ -187,7 +202,9 @@ public class BookValidatorTest {
         return new Object[][]{
                 {"Олег"},
                 {"Qwerty"},
-                {"Alex"}
+                {"Alex"},
+                {"Дунин-Марцинкевич В."},
+                {"Я"},
         };
     }
 
@@ -202,7 +219,8 @@ public class BookValidatorTest {
         return new Object[][]{
                 {"    "},
                 {null},
-                {""}
+                {""},
+                {"Дунин-Марцинкевич Викентий"}
         };
     }
 
