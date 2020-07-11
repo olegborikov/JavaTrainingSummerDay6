@@ -159,10 +159,22 @@ public class BookValidatorTest {
         authors2.add("Дунин-Марцинкевич В.");
         List<String> authors3 = new ArrayList<>();
         authors3.add("Я");
+        List<String> authors4 = new ArrayList<>();
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
         return new Object[][]{
                 {authors1},
                 {authors2},
-                {authors3}
+                {authors3},
+                {authors4}
         };
     }
 
@@ -181,12 +193,25 @@ public class BookValidatorTest {
         List<String> authors3 = new ArrayList<>();
         authors3.add("");
         List<String> authors4 = new ArrayList<>();
-        authors4.add("Дунин-Марцинкевич Викентий");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        authors4.add("Qwerty");
+        List<String> authors5 = new ArrayList<>();
+        authors5.add("Дунин-Марцинкевич Викентий");
         return new Object[][]{
                 {authors1},
                 {authors2},
                 {authors3},
                 {authors4},
+                {authors5},
                 {null}
         };
     }

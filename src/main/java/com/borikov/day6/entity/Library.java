@@ -5,13 +5,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class Library {
-    private static Library instance = new Library();
+    private static Library instance;
     private List<Book> books = new ArrayList<>();
 
     private Library() {
     }
 
     public static Library getInstance() {
+        if (instance == null) {
+            instance = new Library();
+        }
         return instance;
     }
 

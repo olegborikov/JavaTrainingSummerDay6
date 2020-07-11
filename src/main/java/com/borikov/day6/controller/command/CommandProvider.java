@@ -6,17 +6,18 @@ public class CommandProvider {
     private CommandProvider() {
     }
 
-    public static CommandType defineCommand(String request) {
-        CommandType commandType;
+    public static Command defineCommand(String request) {
+        CommandType currentType;
         if (request == null || request.isBlank()) {
-            return DEFAULT_COMMAND;
+            currentType = DEFAULT_COMMAND;
         } else {
             try {
-                commandType = CommandType.valueOf(request.toUpperCase());
+                currentType = CommandType.valueOf(request.toUpperCase());
             } catch (IllegalArgumentException e) {
-                commandType = DEFAULT_COMMAND;
+                currentType = DEFAULT_COMMAND;
             }
         }
-        return commandType;
+        Command current = currentType.getCommand();
+        return current;
     }
 }
