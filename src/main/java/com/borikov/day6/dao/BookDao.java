@@ -11,7 +11,7 @@ public interface BookDao {
 
     void removeBook(Book book) throws DaoException;
 
-    List<Book> getAllBooks();
+    List<Book> findAllBooks();
 
     Optional<Book> findBookById(long id);
 

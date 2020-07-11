@@ -42,7 +42,7 @@ public class BookService {
 
     public List<Book> getAllBooksInLibrary() {
         BookDaoImpl libraryDao = new BookDaoImpl();
-        List<Book> books = libraryDao.getAllBooks();
+        List<Book> books = libraryDao.findAllBooks();
         return books;
     }
 
