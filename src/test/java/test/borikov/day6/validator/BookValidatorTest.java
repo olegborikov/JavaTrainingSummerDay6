@@ -60,7 +60,8 @@ public class BookValidatorTest {
                 {"Я, ты"},
                 {"War and peace part 1"},
                 {"Я"},
-                {"\"Любовь\" - this is ... or not?"}
+                {"\"Любовь\" - this is ... or not?"},
+                {"this is long line that have 40 symbols.."}
         };
     }
 
@@ -75,7 +76,7 @@ public class BookValidatorTest {
         return new Object[][]{
                 {""},
                 {"    "},
-                {"\"Любовь\" - this is ... or not? "},
+                {"this is very long line that have 43 symbols"},
                 {null}
         };
     }
@@ -156,7 +157,7 @@ public class BookValidatorTest {
         authors1.add("Oleg");
         List<String> authors2 = new ArrayList<>();
         authors2.add("Alex");
-        authors2.add("Дунин-Марцинкевич В.");
+        authors2.add("Дунин-Марцинкевич В.Дунин-Марцинкевич В.");
         List<String> authors3 = new ArrayList<>();
         authors3.add("Я");
         List<String> authors4 = new ArrayList<>();
@@ -190,6 +191,7 @@ public class BookValidatorTest {
         authors1.add(null);
         authors1.add("Oleg");
         List<String> authors2 = new ArrayList<>();
+        authors2.add("this is very long line that have 43 symbols");
         List<String> authors3 = new ArrayList<>();
         authors3.add("");
         List<String> authors4 = new ArrayList<>();
@@ -204,14 +206,11 @@ public class BookValidatorTest {
         authors4.add("Qwerty");
         authors4.add("Qwerty");
         authors4.add("Qwerty");
-        List<String> authors5 = new ArrayList<>();
-        authors5.add("Дунин-Марцинкевич Викентий");
         return new Object[][]{
                 {authors1},
                 {authors2},
                 {authors3},
                 {authors4},
-                {authors5},
                 {null}
         };
     }
@@ -228,7 +227,7 @@ public class BookValidatorTest {
                 {"Олег"},
                 {"Qwerty"},
                 {"Alex"},
-                {"Дунин-Марцинкевич В."},
+                {"Дунин-Марцинкевич В.Дунин-Марцинкевич В."},
                 {"Я"},
         };
     }
@@ -245,7 +244,7 @@ public class BookValidatorTest {
                 {"    "},
                 {null},
                 {""},
-                {"Дунин-Марцинкевич Викентий"}
+                {"Дунин-Марцинкевич ВикентийДунин-Марцинкевич Викентий"}
         };
     }
 

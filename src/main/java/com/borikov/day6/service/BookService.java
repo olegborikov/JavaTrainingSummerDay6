@@ -40,7 +40,7 @@ public class BookService {
         }
     }
 
-    public List<Book> getAllBooksInLibrary() {
+    public List<Book> findAllBooksInLibrary() {
         BookDaoImpl libraryDao = new BookDaoImpl();
         List<Book> books = libraryDao.findAllBooks();
         return books;

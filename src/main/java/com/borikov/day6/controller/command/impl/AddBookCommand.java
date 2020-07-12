@@ -17,7 +17,7 @@ public class AddBookCommand implements Command {
     private int authorNumber = 1;
 
     @Override
-    public void execute(Map<String, String> data) {
+    public Map<String, List<Book>> execute(Map<String, String> data) {
         BookService bookService = new BookService();
         try {
             String name = data.get(NAME);
@@ -33,5 +33,6 @@ public class AddBookCommand implements Command {
         } catch (ServiceException | NumberFormatException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }

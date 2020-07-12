@@ -29,4 +29,8 @@ public class Library {
     public boolean remove(Book book) {
         return books.remove(book);
     }
+
+    public void reset() {
+        books = new ArrayList<>();
+    }
 }
