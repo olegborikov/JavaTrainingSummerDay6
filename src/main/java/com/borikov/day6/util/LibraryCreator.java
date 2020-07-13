@@ -18,8 +18,10 @@ public class LibraryCreator {
         if (books == null) {
             createBooks();
         }
-        for (Book book : books) {
-            library.add(book);
+        if (library.get().isEmpty()) {
+            for (Book book : books) {
+                library.add(book);
+            }
         }
     }
 
