@@ -6,6 +6,7 @@ import com.borikov.day6.exception.ServiceException;
 import com.borikov.day6.service.BookService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,24 +16,39 @@ public class RemoveBookCommand implements Command {
     private static final String PUBLISHING_HOUSE = "publishingHouse";
     private static final String AUTHOR = "author";
     private int authorNumber = 1;
+    private static final String REMOVED_BOOK = "removedBook";
 
     @Override
     public Map<String, List<Book>> execute(Map<String, String> data) {
         BookService bookService = new BookService();
-        try {
-            String name = data.get(NAME);
-            double price = Double.parseDouble(data.get(PRICE));
-            String publishingHouse = data.get(PUBLISHING_HOUSE);
-            List<String> authors = new ArrayList<>();
-            while (data.get(AUTHOR + authorNumber) != null) {
-                authors.add(data.get(AUTHOR + authorNumber));
-                authorNumber++;
+        List<Book> removedBook;
+        if(data == null){
+            removedBook = new ArrayList<>();
+        }else{
+            try {
+                String name = data.get(NAME);
+                double price;
+                if (data.get(PRICE) == null) {
+                    price = -1;
+                } else {
+                    price = Double.parseDouble(data.get(PRICE));
+                }
+                String publishingHouse = data.get(PUBLISHING_HOUSE);
+                List<String> authors = new ArrayList<>();
+                while (data.get(AUTHOR + authorNumber) != null) {
+                    authors.add(data.get(AUTHOR + authorNumber));
+                    authorNumber++;
+                }
+                Book book = new Book(name, price, publishingHouse, authors);
+                bookService.removeBookFromLibrary(book);
+                removedBook = new ArrayList<>();
+                removedBook.add(book);
+            } catch (ServiceException | NumberFormatException e) {
+                removedBook = new ArrayList<>();
             }
-            Book book = new Book(name, price, publishingHouse, authors);
-            bookService.removeBookFromLibrary(book);
-        } catch (ServiceException | NumberFormatException e) {
-            e.printStackTrace();
         }
-        return null;
+        Map<String, List<Book>> response = new HashMap<>();
+        response.put(REMOVED_BOOK, removedBook);
+        return response;
     }
 }

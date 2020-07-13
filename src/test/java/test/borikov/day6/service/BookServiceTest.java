@@ -115,11 +115,14 @@ public class BookServiceTest {
         Book newBook2 = LibraryCreator.getCreatedBooks().get(2);
         Book newBook3 = LibraryCreator.getCreatedBooks().get(9);
         Book newBook4 = new Book("Qwerty", 1001, "qwerty", new ArrayList<>());
-        Book newBook5 = new Book("Qwertyddsadasdasd ada dasdsa asd as das asd a", 100, "qwerty", new ArrayList<>());
-        Book newBook6 = new Book("Qwerty", 100, "Qwertyddsadasdasd ada dasdsa asd as das asd a", new ArrayList<>());
+        Book newBook5 = new Book("Qwertyddsadasdasd ada dasdsa asd as das asd a",
+                100, "qwerty", new ArrayList<>());
+        Book newBook6 = new Book("Qwerty", 100,
+                "Qwertyddsadasdasd ada dasdsa asd as das asd a", new ArrayList<>());
         List<String> authors7 = new ArrayList<>();
         authors7.add(null);
-        Book newBook7 = new Book("Qwerty", 100, "Qwertyddsadasdasd ada dasdsa asd as das asd a", authors7);
+        Book newBook7 = new Book("Qwerty", 100,
+                "Qwertyddsadasdasd ada dasdsa asd as das asd a", authors7);
         return new Object[][]{
                 {newBook1},
                 {newBook2},
@@ -218,7 +221,8 @@ public class BookServiceTest {
 
     @Test(dataProvider = "removeBookFromLibraryExceptionData",
             expectedExceptions = ServiceException.class)
-    public void removeBookFromLibraryExceptionTest(Book removeBook) throws ServiceException {
+    public void removeBookFromLibraryExceptionTest(Book removeBook)
+            throws ServiceException {
         bookService.removeBookFromLibrary(removeBook);
     }
 
@@ -390,7 +394,8 @@ public class BookServiceTest {
     }
 
     @Test(dataProvider = "findBooksByPriceInLibraryPositiveData")
-    public void findBooksByPriceInLibraryPositiveTest(double price, List<Book> expected) {
+    public void findBooksByPriceInLibraryPositiveTest(double price,
+                                                      List<Book> expected) {
         try {
             List<Book> actual = bookService.findBooksByPriceInLibrary(price);
             assertEquals(actual, expected);
@@ -420,7 +425,8 @@ public class BookServiceTest {
     }
 
     @Test(dataProvider = "findBooksByPriceInLibraryNegativeData")
-    public void findBooksByPriceInLibraryNegativeTest(double price, List<Book> expected) {
+    public void findBooksByPriceInLibraryNegativeTest(double price,
+                                                      List<Book> expected) {
         try {
             List<Book> actual = bookService.findBooksByPriceInLibrary(price);
             assertNotEquals(actual, expected);
@@ -441,10 +447,10 @@ public class BookServiceTest {
         };
     }
 
-
     @Test(dataProvider = "findBooksByPriceInLibraryExceptionTest",
             expectedExceptions = ServiceException.class)
-    public void findBooksByPriceInLibraryExceptionTest(double price) throws ServiceException {
+    public void findBooksByPriceInLibraryExceptionTest(double price)
+            throws ServiceException {
         bookService.findBooksByPriceInLibrary(price);
     }
 
@@ -472,7 +478,8 @@ public class BookServiceTest {
     public void findBooksByPublishingHouseInLibraryPositiveTest(String publishingHouse,
                                                                 List<Book> expected) {
         try {
-            List<Book> actual = bookService.findBooksByPublishingHouseInLibrary(publishingHouse);
+            List<Book> actual =
+                    bookService.findBooksByPublishingHouseInLibrary(publishingHouse);
             assertEquals(actual, expected);
         } catch (ServiceException e) {
             fail("Incorrect input");
@@ -504,7 +511,8 @@ public class BookServiceTest {
     public void findBooksByPublishingHouseInLibraryNegativeTest(String publishingHouse,
                                                                 List<Book> expected) {
         try {
-            List<Book> actual = bookService.findBooksByPublishingHouseInLibrary(publishingHouse);
+            List<Book> actual =
+                    bookService.findBooksByPublishingHouseInLibrary(publishingHouse);
             assertNotEquals(actual, expected);
         } catch (ServiceException e) {
             fail("Incorrect input");
@@ -512,7 +520,8 @@ public class BookServiceTest {
     }
 
     @Test(expectedExceptions = ServiceException.class)
-    public void findBooksByPublishingHouseInLibraryExceptionTest() throws ServiceException {
+    public void findBooksByPublishingHouseInLibraryExceptionTest()
+            throws ServiceException {
         String publishingHouse = "dqwesdasdas asd ad ads sa dasd dsadasdsa asd a";
         bookService.findBooksByPublishingHouseInLibrary(publishingHouse);
     }
@@ -542,7 +551,8 @@ public class BookServiceTest {
     }
 
     @Test(dataProvider = "findBooksByAuthorInLibraryPositiveData")
-    public void findBooksByAuthorInLibraryPositiveTest(String author, List<Book> expected) {
+    public void findBooksByAuthorInLibraryPositiveTest(String author,
+                                                       List<Book> expected) {
         try {
             List<Book> actual = bookService.findBooksByAuthorInLibrary(author);
             assertEquals(actual, expected);
@@ -576,7 +586,8 @@ public class BookServiceTest {
     }
 
     @Test(dataProvider = "findBooksByAuthorInLibraryNegativeData")
-    public void findBooksByAuthorInLibraryNegativeTest(String author, List<Book> expected) {
+    public void findBooksByAuthorInLibraryNegativeTest(String author,
+                                                       List<Book> expected) {
         try {
             List<Book> actual = bookService.findBooksByAuthorInLibrary(author);
             assertNotEquals(actual, expected);

@@ -18,11 +18,15 @@ public class FindBooksByAuthorCommand implements Command {
     public Map<String, List<Book>> execute(Map<String, String> data) {
         BookService bookService = new BookService();
         List<Book> filteredBooks;
-        try {
-            String author = data.get(AUTHOR);
-            filteredBooks = bookService.findBooksByAuthorInLibrary(author);
-        } catch (ServiceException e) {
+        if (data == null) {
             filteredBooks = new ArrayList<>();
+        } else {
+            try {
+                String author = data.get(AUTHOR);
+                filteredBooks = bookService.findBooksByAuthorInLibrary(author);
+            } catch (ServiceException e) {
+                filteredBooks = new ArrayList<>();
+            }
         }
         Map<String, List<Book>> response = new HashMap<>();
         response.put(FILTERED_BOOKS, filteredBooks);

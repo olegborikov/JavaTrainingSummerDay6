@@ -16,18 +16,27 @@ public class FindBookByIdCommand implements Command {
 
     @Override
     public Map<String, List<Book>> execute(Map<String, String> data) {
-        List<Book> bookList;
         BookService bookService = new BookService();
-        try {
-            long id = Long.parseLong(data.get(ID));
-            Book book = bookService.findBookByIdInLibrary(id);
-            bookList = new ArrayList<>();
-            bookList.add(book);
-        } catch (ServiceException | NumberFormatException e) {
-            bookList = new ArrayList<>();
+        List<Book> filteredBook;
+        if (data == null) {
+            filteredBook = new ArrayList<>();
+        } else {
+            try {
+                long id;
+                if (data.get(ID) == null) {
+                    id = -1;
+                } else {
+                    id = Long.parseLong(data.get(ID));
+                }
+                Book book = bookService.findBookByIdInLibrary(id);
+                filteredBook = new ArrayList<>();
+                filteredBook.add(book);
+            } catch (ServiceException | NumberFormatException e) {
+                filteredBook = new ArrayList<>();
+            }
         }
         Map<String, List<Book>> response = new HashMap<>();
-        response.put(FILTERED_BOOK, bookList);
+        response.put(FILTERED_BOOK, filteredBook);
         return response;
     }
 }
