@@ -1,10 +1,9 @@
 package test.borikov.day6.controller;
 
 import com.borikov.day6.controller.BookController;
-import com.borikov.day6.dao.impl.BookDaoImpl;
-import com.borikov.day6.entity.Book;
-import com.borikov.day6.entity.Library;
-import com.borikov.day6.util.LibraryCreator;
+import com.borikov.day6.model.entity.Book;
+import com.borikov.day6.model.entity.BookStorage;
+import com.borikov.day6.util.BookStorageCreator;
 import org.testng.annotations.*;
 
 import java.util.ArrayList;
@@ -15,27 +14,27 @@ import java.util.Map;
 import static org.testng.Assert.*;
 
 public class BookControllerTest {
-    private Library library;
+    private BookStorage bookStorage;
     private BookController bookController;
 
     @BeforeClass
     public void setUpClass() {
-        library = Library.getInstance();
+        bookStorage = BookStorage.getInstance();
         bookController = new BookController();
-        LibraryCreator.setUpLibrary();
+        BookStorageCreator.setUpBookStorage();
     }
 
     @AfterClass
     public void tearDownClass() {
         bookController = null;
-        library.reset();
-        library = null;
+        bookStorage.reset();
+        bookStorage = null;
     }
 
     @AfterMethod
     public void tearDownMethod() {
-        library.reset();
-        LibraryCreator.setUpLibrary();
+        bookStorage.reset();
+        BookStorageCreator.setUpBookStorage();
     }
 
     @DataProvider(name = "processRequestNegativeData")
@@ -45,7 +44,7 @@ public class BookControllerTest {
         String request3 = "add book";
         Map<String, String> data = new HashMap<>();
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("allBooks", LibraryCreator.getCreatedBooks());
+        expected.put("allBooks", BookStorageCreator.getCreatedBooks());
         return new Object[][]{
                 {request1, data, expected},
                 {request2, data, expected},
@@ -99,7 +98,7 @@ public class BookControllerTest {
                                                   Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
         List<Book> addedBook = new ArrayList<>();
-        addedBook.add(library.get().get(library.get().size() - 1));
+        addedBook.add(bookStorage.get().get(bookStorage.get().size() - 1));
         expected.put("addedBook", addedBook);
         assertEquals(actual, expected);
     }
@@ -145,7 +144,7 @@ public class BookControllerTest {
         Map<String, String> data3 = new HashMap<>();
         data3.put("first", "first");
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("allBooks", LibraryCreator.getCreatedBooks());
+        expected.put("allBooks", BookStorageCreator.getCreatedBooks());
         return new Object[][]{
                 {request, data1, expected},
                 {request, data2, expected},
@@ -167,7 +166,7 @@ public class BookControllerTest {
         Map<String, String> data1 = null;
         Map<String, String> data2 = new HashMap<>();
         Map<String, List<Book>> expected1 = new HashMap<>();
-        expected1.put("allbooks", LibraryCreator.getCreatedBooks());
+        expected1.put("allbooks", BookStorageCreator.getCreatedBooks());
         Map<String, List<Book>> expected2 = new HashMap<>();
         return new Object[][]{
                 {request, data1, expected1},
@@ -190,19 +189,19 @@ public class BookControllerTest {
         data1.put("id", "5");
         Map<String, List<Book>> expected1 = new HashMap<>();
         List<Book> filteredBook1 = new ArrayList<>();
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(4));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(4));
         expected1.put("filteredBook", filteredBook1);
         Map<String, String> data2 = new HashMap<>();
         data2.put("id", "1");
         Map<String, List<Book>> expected2 = new HashMap<>();
         List<Book> filteredBook2 = new ArrayList<>();
-        filteredBook2.add(LibraryCreator.getCreatedBooks().get(0));
+        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(0));
         expected2.put("filteredBook", filteredBook2);
         Map<String, String> data3 = new HashMap<>();
         data3.put("id", "4");
         Map<String, List<Book>> expected3 = new HashMap<>();
         List<Book> filteredBook3 = new ArrayList<>();
-        filteredBook3.add(LibraryCreator.getCreatedBooks().get(3));
+        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(3));
         expected3.put("filteredBook", filteredBook3);
         return new Object[][]{
                 {request, data1, expected1},
@@ -251,22 +250,22 @@ public class BookControllerTest {
         data1.put("author", "Oleg");
         Map<String, List<Book>> expected1 = new HashMap<>();
         List<Book> filteredBook1 = new ArrayList<>();
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(3));
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(7));
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(9));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(3));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(7));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(9));
         expected1.put("filteredBooks", filteredBook1);
         Map<String, String> data2 = new HashMap<>();
         data2.put("author", "Sapolsky");
         Map<String, List<Book>> expected2 = new HashMap<>();
         List<Book> filteredBook2 = new ArrayList<>();
-        filteredBook2.add(LibraryCreator.getCreatedBooks().get(5));
+        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(5));
         expected2.put("filteredBooks", filteredBook2);
         Map<String, String> data3 = new HashMap<>();
         data3.put("author", "Robert");
         Map<String, List<Book>> expected3 = new HashMap<>();
         List<Book> filteredBook3 = new ArrayList<>();
-        filteredBook3.add(LibraryCreator.getCreatedBooks().get(3));
-        filteredBook3.add(LibraryCreator.getCreatedBooks().get(5));
+        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(3));
+        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(5));
         expected3.put("filteredBooks", filteredBook3);
         return new Object[][]{
                 {request, data1, expected1},
@@ -315,20 +314,20 @@ public class BookControllerTest {
         data1.put("name", "Война и мир");
         Map<String, List<Book>> expected1 = new HashMap<>();
         List<Book> filteredBook1 = new ArrayList<>();
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(0));
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(4));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(0));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(4));
         expected1.put("filteredBooks", filteredBook1);
         Map<String, String> data2 = new HashMap<>();
         data2.put("name", "Метро 2033");
         Map<String, List<Book>> expected2 = new HashMap<>();
         List<Book> filteredBook2 = new ArrayList<>();
-        filteredBook2.add(LibraryCreator.getCreatedBooks().get(8));
+        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(8));
         expected2.put("filteredBooks", filteredBook2);
         Map<String, String> data3 = new HashMap<>();
         data3.put("name", "Я");
         Map<String, List<Book>> expected3 = new HashMap<>();
         List<Book> filteredBook3 = new ArrayList<>();
-        filteredBook3.add(LibraryCreator.getCreatedBooks().get(7));
+        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(7));
         expected3.put("filteredBooks", filteredBook3);
         return new Object[][]{
                 {request, data1, expected1},
@@ -377,21 +376,21 @@ public class BookControllerTest {
         data1.put("price", "100");
         Map<String, List<Book>> expected1 = new HashMap<>();
         List<Book> filteredBook1 = new ArrayList<>();
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(0));
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(4));
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(8));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(0));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(4));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(8));
         expected1.put("filteredBooks", filteredBook1);
         Map<String, String> data2 = new HashMap<>();
         data2.put("price", "1000");
         Map<String, List<Book>> expected2 = new HashMap<>();
         List<Book> filteredBook2 = new ArrayList<>();
-        filteredBook2.add(LibraryCreator.getCreatedBooks().get(2));
+        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(2));
         expected2.put("filteredBooks", filteredBook2);
         Map<String, String> data3 = new HashMap<>();
         data3.put("price", "10");
         Map<String, List<Book>> expected3 = new HashMap<>();
         List<Book> filteredBook3 = new ArrayList<>();
-        filteredBook3.add(LibraryCreator.getCreatedBooks().get(6));
+        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(6));
         expected3.put("filteredBooks", filteredBook3);
         return new Object[][]{
                 {request, data1, expected1},
@@ -440,23 +439,23 @@ public class BookControllerTest {
         data1.put("publishingHouse", "Минск");
         Map<String, List<Book>> expected1 = new HashMap<>();
         List<Book> filteredBook1 = new ArrayList<>();
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(0));
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(1));
-        filteredBook1.add(LibraryCreator.getCreatedBooks().get(6));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(0));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(1));
+        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(6));
         expected1.put("filteredBooks", filteredBook1);
         Map<String, String> data2 = new HashMap<>();
         data2.put("publishingHouse", "Москва");
         Map<String, List<Book>> expected2 = new HashMap<>();
         List<Book> filteredBook2 = new ArrayList<>();
-        filteredBook2.add(LibraryCreator.getCreatedBooks().get(4));
-        filteredBook2.add(LibraryCreator.getCreatedBooks().get(7));
+        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(4));
+        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(7));
         expected2.put("filteredBooks", filteredBook2);
         Map<String, String> data3 = new HashMap<>();
         data3.put("publishingHouse", "London");
         Map<String, List<Book>> expected3 = new HashMap<>();
         List<Book> filteredBook3 = new ArrayList<>();
-        filteredBook3.add(LibraryCreator.getCreatedBooks().get(5));
-        filteredBook3.add(LibraryCreator.getCreatedBooks().get(9));
+        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(5));
+        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(9));
         expected3.put("filteredBooks", filteredBook3);
         return new Object[][]{
                 {request, data1, expected1},

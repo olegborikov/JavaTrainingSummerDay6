@@ -1,28 +1,28 @@
 package com.borikov.day6.util;
 
-import com.borikov.day6.entity.Book;
-import com.borikov.day6.entity.Library;
+import com.borikov.day6.model.entity.Book;
+import com.borikov.day6.model.entity.BookStorage;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LibraryCreator {
+public class BookStorageCreator {
     private static List<Book> books;
 
-    private LibraryCreator() {
+    private BookStorageCreator() {
     }
 
-    public static void setUpLibrary() {
-        Library library = Library.getInstance();
+    public static void setUpBookStorage() {
+       /* BookStorage bookStorage = BookStorage.getInstance();
         if (books == null) {
             createBooks();
         }
-        if (library.get().isEmpty()) {
+        if (bookStorage.get().isEmpty()) {
             for (Book book : books) {
-                library.add(book);
+                bookStorage.add(book);
             }
-        }
+        }*/
     }
 
     public static List<Book> getCreatedBooks() {

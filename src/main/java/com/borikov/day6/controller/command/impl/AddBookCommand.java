@@ -1,9 +1,9 @@
 package com.borikov.day6.controller.command.impl;
 
 import com.borikov.day6.controller.command.Command;
-import com.borikov.day6.entity.Book;
+import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.exception.ServiceException;
-import com.borikov.day6.service.BookService;
+import com.borikov.day6.model.service.BookService;
 
 import java.util.ArrayList;
 import java.util.HashMap;

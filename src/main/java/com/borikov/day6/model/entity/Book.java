@@ -1,4 +1,4 @@
-package com.borikov.day6.entity;
+package com.borikov.day6.model.entity;
 
 import com.borikov.day6.util.IdGenerator;
 
