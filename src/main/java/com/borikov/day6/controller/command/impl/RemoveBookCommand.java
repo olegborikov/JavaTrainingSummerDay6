@@ -40,7 +40,7 @@ public class RemoveBookCommand implements Command {
                     authorNumber++;
                 }
                 Book book = new Book(name, price, publishingHouse, authors);
-                bookService.removeBookFromLibrary(book);
+                bookService.removeBook(book);
                 removedBook = new ArrayList<>();
                 removedBook.add(book);
             } catch (ServiceException | NumberFormatException e) {

@@ -3,7 +3,7 @@ package test.borikov.day6.controller;
 import com.borikov.day6.controller.BookController;
 import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.model.entity.BookStorage;
-import com.borikov.day6.util.BookStorageCreator;
+import test.borikov.day6.creator.BookStorageCreator;
 import org.testng.annotations.*;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.testng.Assert.*;
 
 public class BookControllerTest {
-    private BookStorage bookStorage;
+   /* private BookStorage bookStorage;
     private BookController bookController;
 
     @BeforeClass
@@ -31,7 +31,7 @@ public class BookControllerTest {
         bookStorage = null;
     }
 
-    @AfterMethod
+    @AfterMethod()
     public void tearDownMethod() {
         bookStorage.reset();
         BookStorageCreator.setUpBookStorage();
@@ -556,5 +556,5 @@ public class BookControllerTest {
                                                      Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
         assertEquals(actual, expected);
-    }
+    }*/
 }

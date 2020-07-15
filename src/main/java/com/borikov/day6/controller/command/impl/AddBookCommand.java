@@ -40,7 +40,7 @@ public class AddBookCommand implements Command {
                     authorNumber++;
                 }
                 Book newBook = new Book(name, price, publishingHouse, authors);
-                bookService.addBookInLibrary(newBook);
+                bookService.addBook(newBook);
                 addedBook = new ArrayList<>();
                 addedBook.add(newBook);
             } catch (ServiceException | NumberFormatException e) {

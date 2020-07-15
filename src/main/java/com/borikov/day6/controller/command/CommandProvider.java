@@ -5,7 +5,7 @@ public class CommandProvider {
 
     public Command defineCommand(String request) {
         CommandType currentType;
-        if (request == null || request.isBlank()) {
+        if (request == null) {
             currentType = DEFAULT_COMMAND;
         } else {
             try {
@@ -14,7 +14,7 @@ public class CommandProvider {
                 currentType = DEFAULT_COMMAND;
             }
         }
-        Command current = currentType.getCommand();
-        return current;
+        Command currentCommand = currentType.getCommand();
+        return currentCommand;
     }
 }

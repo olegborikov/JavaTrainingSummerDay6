@@ -1,31 +1,32 @@
-package test.borikov.day6.service;
+package test.borikov.day6.model.dao.impl;
 
+import com.borikov.day6.model.dao.impl.BookListDaoImpl;
 import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.model.entity.BookStorage;
-import com.borikov.day6.exception.ServiceException;
-import com.borikov.day6.model.service.BookService;
-import com.borikov.day6.util.BookStorageCreator;
+import com.borikov.day6.exception.DaoException;
+import test.borikov.day6.creator.BookStorageCreator;
 import org.testng.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.testng.Assert.*;
 
-public class BookServiceTest {
-    private BookStorage bookStorage;
-    private BookService bookService;
+public class BookListDaoImplTest {
+   /* private BookStorage bookStorage;
+    private BookListDaoImpl bookDao;
 
     @BeforeClass
     public void setUpClass() {
         bookStorage = BookStorage.getInstance();
-        bookService = new BookService();
+        bookDao = new BookListDaoImpl();
         BookStorageCreator.setUpBookStorage();
     }
 
     @AfterClass
     public void tearDownClass() {
-        bookService = null;
+        bookDao = null;
         bookStorage.reset();
         bookStorage = null;
     }
@@ -36,8 +37,8 @@ public class BookServiceTest {
         BookStorageCreator.setUpBookStorage();
     }
 
-    @DataProvider(name = "addBookInLibraryPositiveData")
-    public Object[][] createAddBookInLibraryPositiveData() {
+    @DataProvider(name = "addBookPositiveData")
+    public Object[][] createAddBookPositiveData() {
         List<String> authors1 = new ArrayList<>();
         authors1.add("Лев");
         Book newBook1 = new Book("Война", 120, "Минск", authors1);
@@ -61,19 +62,19 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "addBookInLibraryPositiveData")
-    public void addBookInLibraryPositiveTest(Book newBook, List<Book> expected) {
+    @Test(dataProvider = "addBookPositiveData")
+    public void addBookPositiveTest(Book newBook, List<Book> expected) {
         try {
-            bookService.addBookInLibrary(newBook);
+            bookDao.add(newBook);
             List<Book> actual = bookStorage.get();
             assertEquals(actual, expected);
-        } catch (ServiceException e) {
+        } catch (DaoException e) {
             fail("Incorrect input");
         }
     }
 
-    @DataProvider(name = "addBookInLibraryNegativeData")
-    public Object[][] createAddBookInLibraryNegativeData() {
+    @DataProvider(name = "addBookNegativeData")
+    public Object[][] createAddBookNegativeData() {
         List<String> authors1 = new ArrayList<>();
         authors1.add("Лев");
         Book newBook1 = new Book("Война", 120, "Минск", authors1);
@@ -98,51 +99,38 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "addBookInLibraryNegativeData")
-    public void addBookInLibraryNegativeTest(Book newBook, List<Book> expected) {
+    @Test(dataProvider = "addBookNegativeData")
+    public void addBookNegativeTest(Book newBook, List<Book> expected) {
         try {
-            bookService.addBookInLibrary(newBook);
+            bookDao.add(newBook);
             List<Book> actual = bookStorage.get();
             assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
+        } catch (DaoException e) {
             fail("Incorrect input");
         }
     }
 
-    @DataProvider(name = "addBookInLibraryExceptionData")
-    public Object[][] createAddBookInLibraryExceptionData() {
+    @DataProvider(name = "addBookExceptionData")
+    public Object[][] createAddBookExceptionData() {
         Book newBook1 = BookStorageCreator.getCreatedBooks().get(1);
         Book newBook2 = BookStorageCreator.getCreatedBooks().get(2);
         Book newBook3 = BookStorageCreator.getCreatedBooks().get(9);
-        Book newBook4 = new Book("Qwerty", 1001, "qwerty", new ArrayList<>());
-        Book newBook5 = new Book("Qwertyddsadasdasd ada dasdsa asd as das asd a",
-                100, "qwerty", new ArrayList<>());
-        Book newBook6 = new Book("Qwerty", 100,
-                "Qwertyddsadasdasd ada dasdsa asd as das asd a", new ArrayList<>());
-        List<String> authors7 = new ArrayList<>();
-        authors7.add(null);
-        Book newBook7 = new Book("Qwerty", 100,
-                "Qwertyddsadasdasd ada dasdsa asd as das asd a", authors7);
         return new Object[][]{
                 {newBook1},
                 {newBook2},
-                {newBook3},
-                {newBook4},
-                {newBook5},
-                {newBook6},
-                {newBook7},
-                {null},
+                {newBook3}
         };
     }
 
-    @Test(dataProvider = "addBookInLibraryExceptionData",
-            expectedExceptions = ServiceException.class)
-    public void addBookInLibraryExceptionTest(Book newBook) throws ServiceException {
-        bookService.addBookInLibrary(newBook);
+    @Test(dataProvider = "addBookExceptionData",
+            expectedExceptions = DaoException.class)
+    public void addBookExceptionTest(Book newBook)
+            throws DaoException {
+        bookDao.add(newBook);
     }
 
-    @DataProvider(name = "removeBookFromLibraryPositiveData")
-    public Object[][] createRemoveBookFromLibraryPositiveData() {
+    @DataProvider(name = "removeBookPositiveData")
+    public Object[][] createRemoveBookPositiveData() {
         Book removeBook1 = BookStorageCreator.getCreatedBooks().get(1);
         List<Book> expected1 = new ArrayList<>(BookStorageCreator.getCreatedBooks());
         expected1.remove(removeBook1);
@@ -159,18 +147,18 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "removeBookFromLibraryPositiveData")
-    public void removeBookFromLibraryPositiveTest(Book removeBook, List<Book> expected) {
+    @Test(dataProvider = "removeBookPositiveData")
+    public void removeBookPositiveTest(Book removeBook, List<Book> expected) {
         try {
-            bookService.removeBookFromLibrary(removeBook);
+            bookDao.remove(removeBook);
             List<Book> actual = bookStorage.get();
             assertEquals(actual, expected);
-        } catch (ServiceException e) {
+        } catch (DaoException e) {
             fail("Incorrect input");
         }
     }
 
-    @DataProvider(name = "removeBookFromLibraryNegativeData")
+    @DataProvider(name = "removeBookNegativeData")
     public Object[][] createRemoveBookNegativeData() {
         Book removeBook1 = BookStorageCreator.getCreatedBooks().get(1);
         List<Book> expected1 = new ArrayList<>(BookStorageCreator.getCreatedBooks());
@@ -188,18 +176,18 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "removeBookFromLibraryNegativeData")
-    public void removeBookFromLibraryNegativeTest(Book removeBook, List<Book> expected) {
+    @Test(dataProvider = "removeBookNegativeData")
+    public void removeBookNegativeTest(Book removeBook, List<Book> expected) {
         try {
-            bookService.removeBookFromLibrary(removeBook);
+            bookDao.remove(removeBook);
             List<Book> actual = bookStorage.get();
             assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
+        } catch (DaoException e) {
             fail("Incorrect input");
         }
     }
 
-    @DataProvider(name = "removeBookFromLibraryExceptionData")
+    @DataProvider(name = "removeBookExceptionData")
     public Object[][] createRemoveBookExceptionData() {
         List<String> authors1 = new ArrayList<>();
         authors1.add("Лев");
@@ -214,41 +202,40 @@ public class BookServiceTest {
         return new Object[][]{
                 {removeBook1},
                 {removeBook2},
-                {removeBook3},
-                {null}
+                {removeBook3}
         };
     }
 
-    @Test(dataProvider = "removeBookFromLibraryExceptionData",
-            expectedExceptions = ServiceException.class)
-    public void removeBookFromLibraryExceptionTest(Book removeBook)
-            throws ServiceException {
-        bookService.removeBookFromLibrary(removeBook);
+    @Test(dataProvider = "removeBookExceptionData",
+            expectedExceptions = DaoException.class)
+    public void removeBookExceptionTest(Book removeBook)
+            throws DaoException {
+        bookDao.remove(removeBook);
     }
 
     @Test
-    public void findAllBooksInLibraryPositiveTest() {
-        List<Book> actual = bookService.findAllBooksInLibrary();
+    public void findAllBooksPositiveTest() {
+        List<Book> actual = bookDao.findAll();
         List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
         assertEquals(actual, expected);
     }
 
     @Test
-    public void findAllBooksInLibraryNegativeTest() {
-        List<Book> actual = bookService.findAllBooksInLibrary();
+    public void findAllBooksNegativeTest() {
+        List<Book> actual = bookDao.findAll();
         List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
         expected.add(null);
         assertNotEquals(actual, expected);
     }
 
-    @DataProvider(name = "findBookByIdInLibraryPositiveData")
-    public Object[][] createFindBookByIdInLibraryPositiveData() {
+    @DataProvider(name = "findBookByIdPositiveData")
+    public Object[][] createFindBookByIdPositiveData() {
         long id1 = 1;
-        Book expected1 = BookStorageCreator.getCreatedBooks().get(0);
+        Optional<Book> expected1 = Optional.of(BookStorageCreator.getCreatedBooks().get(0));
         long id2 = 9;
-        Book expected2 = BookStorageCreator.getCreatedBooks().get(9);
-        long id3 = 7;
-        Book expected3 = BookStorageCreator.getCreatedBooks().get(6);
+        Optional<Book> expected2 = Optional.of(BookStorageCreator.getCreatedBooks().get(9));
+        long id3 = 11;
+        Optional<Book> expected3 = Optional.empty();
         return new Object[][]{
                 {id1, expected1},
                 {id2, expected2},
@@ -256,61 +243,34 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "findBookByIdInLibraryPositiveData")
-    public void findBookByIdInLibraryPositiveTest(long id, Book expected) {
-        try {
-            Book actual = bookService.findBookByIdInLibrary(id);
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBookByIdPositiveData")
+    public void findBookByIdPositiveTest(long id, Optional<Book> expected) {
+        Optional<Book> actual = bookDao.findById(id);
+        assertEquals(actual, expected);
     }
 
-    @DataProvider(name = "findBookByIdInLibraryNegativeData")
-    public Object[][] createFindBookByIdInLibraryNegativeData() {
+    @DataProvider(name = "findBookByIdNegativeData")
+    public Object[][] createFindBookByIdNegativeData() {
         long id1 = 1;
-        Book expected1 = BookStorageCreator.getCreatedBooks().get(1);
+        Optional<Book> expected1 = Optional.of(BookStorageCreator.getCreatedBooks().get(3));
         long id2 = 9;
-        Book expected2 = BookStorageCreator.getCreatedBooks().get(3);
-        long id3 = 7;
-        Book expected3 = BookStorageCreator.getCreatedBooks().get(2);
+        Optional<Book> expected2 = Optional.empty();
+        long id3 = 11;
         return new Object[][]{
                 {id1, expected1},
                 {id2, expected2},
-                {id3, expected3}
+                {id3, null}
         };
     }
 
-    @Test(dataProvider = "findBookByIdInLibraryNegativeData")
-    public void findBookByIdInLibraryNegativeTest(long id, Book expected) {
-        try {
-            Book actual = bookService.findBookByIdInLibrary(id);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBookByIdNegativeData")
+    public void findBookByIdNegativeTest(long id, Optional<Book> expected) {
+        Optional<Book> actual = bookDao.findById(id);
+        assertNotEquals(actual, expected);
     }
 
-    @DataProvider(name = "findBookByIdInLibraryExceptionData")
-    public Object[][] createFindBookByIdInLibraryExceptionData() {
-        long id1 = -1;
-        long id2 = 100_001;
-        long id3 = 12;
-        return new Object[][]{
-                {id1},
-                {id2},
-                {id3}
-        };
-    }
-
-    @Test(dataProvider = "findBookByIdInLibraryExceptionData",
-            expectedExceptions = ServiceException.class)
-    public void findBookByIdInLibraryExceptionTest(long id) throws ServiceException {
-        bookService.findBookByIdInLibrary(id);
-    }
-
-    @DataProvider(name = "findBooksByNameInLibraryPositiveData")
-    public Object[][] createFindBooksByNameInLibraryPositiveData() {
+    @DataProvider(name = "findBooksByNamePositiveData")
+    public Object[][] createFindBooksByNamePositiveData() {
         String name1 = "Война и мир";
         List<Book> expected1 = new ArrayList<>();
         expected1.add(BookStorageCreator.getCreatedBooks().get(0));
@@ -327,18 +287,14 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "findBooksByNameInLibraryPositiveData")
-    public void findBooksByNameInLibraryPositiveTest(String name, List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByNameInLibrary(name);
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBooksByNamePositiveData")
+    public void findBooksByNamePositiveTest(String name, List<Book> expected) {
+        List<Book> actual = bookDao.findByName(name);
+        assertEquals(actual, expected);
     }
 
-    @DataProvider(name = "findBooksByNameInLibraryNegativeData")
-    public Object[][] createFindBooksByNameInLibraryNegativeData() {
+    @DataProvider(name = "findBooksByNameNegativeData")
+    public Object[][] createFindBooksByNameNegativeData() {
         String name1 = "Война и мир";
         List<Book> expected1 = new ArrayList<>();
         expected1.add(BookStorageCreator.getCreatedBooks().get(0));
@@ -357,25 +313,14 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "findBooksByNameInLibraryNegativeData")
-    public void findBooksByNameInLibraryNegativeTest(String name, List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByNameInLibrary(name);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBooksByNameNegativeData")
+    public void findBooksByNameNegativeTest(String name, List<Book> expected) {
+        List<Book> actual = bookDao.findByName(name);
+        assertNotEquals(actual, expected);
     }
 
-    @Test(expectedExceptions = ServiceException.class)
-    public void findBooksByNameInLibraryExceptionTest()
-            throws ServiceException {
-        String name = "Война и мирqweqdrehfhfghfghg dfsfds sdf sdffh";
-        bookService.findBooksByNameInLibrary(name);
-    }
-
-    @DataProvider(name = "findBooksByPriceInLibraryPositiveData")
-    public Object[][] createFindBooksByPriceInLibraryPositiveData() {
+    @DataProvider(name = "findBooksByPricePositiveData")
+    public Object[][] createFindBooksByPricePositiveData() {
         double price1 = 100;
         List<Book> expected1 = new ArrayList<>();
         expected1.add(BookStorageCreator.getCreatedBooks().get(0));
@@ -393,19 +338,14 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "findBooksByPriceInLibraryPositiveData")
-    public void findBooksByPriceInLibraryPositiveTest(double price,
-                                                      List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByPriceInLibrary(price);
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBooksByPricePositiveData")
+    public void findBooksByPricePositiveTest(double price, List<Book> expected) {
+        List<Book> actual = bookDao.findByPrice(price);
+        assertEquals(actual, expected);
     }
 
-    @DataProvider(name = "findBooksByPriceInLibraryNegativeData")
-    public Object[][] createFindBooksByPriceInLibraryNegativeData() {
+    @DataProvider(name = "findBooksByPriceNegativeData")
+    public Object[][] createFindBooksByPriceNegativeData() {
         double price1 = 100;
         List<Book> expected1 = new ArrayList<>();
         expected1.add(BookStorageCreator.getCreatedBooks().get(0));
@@ -424,38 +364,14 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "findBooksByPriceInLibraryNegativeData")
-    public void findBooksByPriceInLibraryNegativeTest(double price,
-                                                      List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByPriceInLibrary(price);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBooksByPriceNegativeData")
+    public void findBooksByPriceNegativeTest(double price, List<Book> expected) {
+        List<Book> actual = bookDao.findByPrice(price);
+        assertNotEquals(actual, expected);
     }
 
-    @DataProvider(name = "findBooksByPriceInLibraryExceptionTest")
-    public Object[][] createFindBooksByPriceInLibraryExceptionTest() {
-        double price1 = 0;
-        double price2 = 1001;
-        double price3 = -1;
-        return new Object[][]{
-                {price1},
-                {price2},
-                {price3}
-        };
-    }
-
-    @Test(dataProvider = "findBooksByPriceInLibraryExceptionTest",
-            expectedExceptions = ServiceException.class)
-    public void findBooksByPriceInLibraryExceptionTest(double price)
-            throws ServiceException {
-        bookService.findBooksByPriceInLibrary(price);
-    }
-
-    @DataProvider(name = "findBooksByPublishingHouseInLibraryPositiveData")
-    public Object[][] createFindBooksByPublishingHouseInLibraryPositiveData() {
+    @DataProvider(name = "findBooksByPublishingHousePositiveData")
+    public Object[][] createFindBooksByPublishingHousePositiveData() {
         String publishingHouse1 = "Минск";
         List<Book> expected1 = new ArrayList<>();
         expected1.add(BookStorageCreator.getCreatedBooks().get(0));
@@ -474,20 +390,15 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "findBooksByPublishingHouseInLibraryPositiveData")
-    public void findBooksByPublishingHouseInLibraryPositiveTest(String publishingHouse,
-                                                                List<Book> expected) {
-        try {
-            List<Book> actual =
-                    bookService.findBooksByPublishingHouseInLibrary(publishingHouse);
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBooksByPublishingHousePositiveData")
+    public void findBooksByPublishingHousePositiveTest(String publishingHouse,
+                                                       List<Book> expected) {
+        List<Book> actual = bookDao.findByPublishingHouse(publishingHouse);
+        assertEquals(actual, expected);
     }
 
-    @DataProvider(name = "findBooksByPublishingHouseInLibraryNegativeData")
-    public Object[][] createFindBooksByPublishingHouseInLibraryNegativeData() {
+    @DataProvider(name = "findBooksByPublishingHouseNegativeData")
+    public Object[][] createFindBooksByPublishingHouseNegativeData() {
         String publishingHouse1 = "Минск";
         List<Book> expected1 = new ArrayList<>();
         expected1.add(BookStorageCreator.getCreatedBooks().get(0));
@@ -507,27 +418,15 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "findBooksByPublishingHouseInLibraryNegativeData")
-    public void findBooksByPublishingHouseInLibraryNegativeTest(String publishingHouse,
-                                                                List<Book> expected) {
-        try {
-            List<Book> actual =
-                    bookService.findBooksByPublishingHouseInLibrary(publishingHouse);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBooksByPublishingHouseNegativeData")
+    public void findBooksByPublishingHouseNegativeTest(String publishingHouse,
+                                                       List<Book> expected) {
+        List<Book> actual = bookDao.findByPublishingHouse(publishingHouse);
+        assertNotEquals(actual, expected);
     }
 
-    @Test(expectedExceptions = ServiceException.class)
-    public void findBooksByPublishingHouseInLibraryExceptionTest()
-            throws ServiceException {
-        String publishingHouse = "dqwesdasdas asd ad ads sa dasd dsadasdsa asd a";
-        bookService.findBooksByPublishingHouseInLibrary(publishingHouse);
-    }
-
-    @DataProvider(name = "findBooksByAuthorInLibraryPositiveData")
-    public Object[][] createFindBooksByAuthorInLibraryPositiveData() {
+    @DataProvider(name = "findBooksByAuthorPositiveData")
+    public Object[][] createFindBooksByAuthorPositiveData() {
         String author1 = "Oleg";
         List<Book> expected1 = new ArrayList<>();
         expected1.add(BookStorageCreator.getCreatedBooks().get(3));
@@ -550,19 +449,14 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "findBooksByAuthorInLibraryPositiveData")
-    public void findBooksByAuthorInLibraryPositiveTest(String author,
-                                                       List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByAuthorInLibrary(author);
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBooksByAuthorPositiveData")
+    public void findBooksByAuthorPositiveTest(String author, List<Book> expected) {
+        List<Book> actual = bookDao.findByAuthor(author);
+        assertEquals(actual, expected);
     }
 
-    @DataProvider(name = "findBooksByAuthorInLibraryNegativeData")
-    public Object[][] createFindBooksByAuthorInLibraryNegativeData() {
+    @DataProvider(name = "findBooksByAuthorNegativeData")
+    public Object[][] createFindBooksByAuthorNegativeData() {
         String author1 = "Oleg";
         List<Book> expected1 = new ArrayList<>();
         expected1.add(BookStorageCreator.getCreatedBooks().get(3));
@@ -585,26 +479,15 @@ public class BookServiceTest {
         };
     }
 
-    @Test(dataProvider = "findBooksByAuthorInLibraryNegativeData")
-    public void findBooksByAuthorInLibraryNegativeTest(String author,
-                                                       List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByAuthorInLibrary(author);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
-    }
-
-    @Test(expectedExceptions = ServiceException.class)
-    public void findBooksByAuthorInLibraryExceptionTest() throws ServiceException {
-        String author = "dqwesdasdas asd ad ads sa dasd dsadasdsa asd a";
-        bookService.findBooksByAuthorInLibrary(author);
+    @Test(dataProvider = "findBooksByAuthorNegativeData")
+    public void findBooksByAuthorNegativeTest(String author, List<Book> expected) {
+        List<Book> actual = bookDao.findByAuthor(author);
+        assertNotEquals(actual, expected);
     }
 
     @Test
-    public void sortBooksByIdInLibraryPositiveTest() {
-        List<Book> actual = bookService.sortBooksByIdInLibrary();
+    public void sortBooksByIdPositiveTest() {
+        List<Book> actual = bookDao.sortById();
         List<Book> expected = new ArrayList<>();
         expected.add(BookStorageCreator.getCreatedBooks().get(0));
         expected.add(BookStorageCreator.getCreatedBooks().get(1));
@@ -620,15 +503,15 @@ public class BookServiceTest {
     }
 
     @Test
-    public void sortBooksByIdInLibraryNegativeTest() {
-        List<Book> actual = bookService.sortBooksByIdInLibrary();
+    public void sortBooksByIdNegativeTest() {
+        List<Book> actual = bookDao.sortById();
         List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
         assertNotEquals(actual, expected);
     }
 
     @Test
-    public void sortBooksByNameInLibraryPositiveTest() {
-        List<Book> actual = bookService.sortBooksByNameInLibrary();
+    public void sortBooksByNamePositiveTest() {
+        List<Book> actual = bookDao.sortByName();
         List<Book> expected = new ArrayList<>();
         expected.add(BookStorageCreator.getCreatedBooks().get(5));
         expected.add(BookStorageCreator.getCreatedBooks().get(9));
@@ -644,15 +527,15 @@ public class BookServiceTest {
     }
 
     @Test
-    public void sortBooksByNameInLibraryNegativeTest() {
-        List<Book> actual = bookService.sortBooksByNameInLibrary();
+    public void sortBooksByNameNegativeTest() {
+        List<Book> actual = bookDao.sortByName();
         List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
         assertNotEquals(actual, expected);
     }
 
     @Test
-    public void sortBooksByPriceInLibraryPositiveTest() {
-        List<Book> actual = bookService.sortBooksByPriceInLibrary();
+    public void sortBooksByPricePositiveTest() {
+        List<Book> actual = bookDao.sortByPrice();
         List<Book> expected = new ArrayList<>();
         expected.add(BookStorageCreator.getCreatedBooks().get(6));
         expected.add(BookStorageCreator.getCreatedBooks().get(1));
@@ -668,15 +551,15 @@ public class BookServiceTest {
     }
 
     @Test
-    public void sortBooksByPriceInLibraryNegativeTest() {
-        List<Book> actual = bookService.sortBooksByPriceInLibrary();
+    public void sortBooksByPriceNegativeTest() {
+        List<Book> actual = bookDao.sortByPrice();
         List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
         assertNotEquals(actual, expected);
     }
 
     @Test
-    public void sortBooksByPublishingHouseInLibraryPositiveTest() {
-        List<Book> actual = bookService.sortBooksByPublishingHouseInLibrary();
+    public void sortBooksByPublishingHousePositiveTest() {
+        List<Book> actual = bookDao.sortByPublishingHouse();
         List<Book> expected = new ArrayList<>();
         expected.add(BookStorageCreator.getCreatedBooks().get(5));
         expected.add(BookStorageCreator.getCreatedBooks().get(9));
@@ -692,15 +575,15 @@ public class BookServiceTest {
     }
 
     @Test
-    public void sortBooksByPublishingHouseInLibraryNegativeTest() {
-        List<Book> actual = bookService.sortBooksByPublishingHouseInLibrary();
+    public void sortBooksByPublishingHouseNegativeTest() {
+        List<Book> actual = bookDao.sortByPublishingHouse();
         List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
         assertNotEquals(actual, expected);
     }
 
     @Test
-    public void sortBooksByAuthorsInLibraryPositiveTest() {
-        List<Book> actual = bookService.sortBooksByAuthorsInLibrary();
+    public void sortBooksByAuthorsPositiveTest() {
+        List<Book> actual = bookDao.sortByAuthors();
         List<Book> expected = new ArrayList<>();
         expected.add(BookStorageCreator.getCreatedBooks().get(6));
         expected.add(BookStorageCreator.getCreatedBooks().get(0));
@@ -716,9 +599,9 @@ public class BookServiceTest {
     }
 
     @Test
-    public void sortBooksByAuthorsInLibraryNegativeTest() {
-        List<Book> actual = bookService.sortBooksByAuthorsInLibrary();
+    public void sortBooksByAuthorsNegativeTest() {
+        List<Book> actual = bookDao.sortByAuthors();
         List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
         assertNotEquals(actual, expected);
-    }
+    }*/
 }

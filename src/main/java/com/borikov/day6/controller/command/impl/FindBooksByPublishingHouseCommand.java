@@ -24,7 +24,7 @@ public class FindBooksByPublishingHouseCommand implements Command {
         } else {
             try {
                 String publishingHouse = data.get(PUBLISHING_HOUSE);
-                filteredBooks = bookService.findBooksByPublishingHouseInLibrary(publishingHouse);
+                filteredBooks = bookService.findBooksByPublishingHouse(publishingHouse);
             } catch (ServiceException e) {
                 filteredBooks = new ArrayList<>();
             }

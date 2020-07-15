@@ -1,4 +1,4 @@
-package com.borikov.day6.util;
+package test.borikov.day6.creator;
 
 import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.model.entity.BookStorage;

@@ -24,7 +24,7 @@ public class FindBooksByNameCommand implements Command {
         } else {
             try {
                 String name = data.get(NAME);
-                filteredBooks = bookService.findBooksByNameInLibrary(name);
+                filteredBooks = bookService.findBooksByName(name);
             } catch (ServiceException e) {
                 filteredBooks = new ArrayList<>();
             }

@@ -14,116 +14,174 @@ import java.util.stream.Collectors;
 public class BookListDaoImpl implements BookListDao {
     @Override
     public void add(Book book) throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
         try {
-            BookStorage.getInstance().add(book);
+            storage.add(book);
         } catch (StorageException e) {
-            throw new DaoException(e);
+            throw new DaoException("Storage error while adding book", e);
         }
     }
 
     @Override
     public void remove(Book book) throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
         try {
-            BookStorage.getInstance().remove(book);
+            storage.remove(book);
         } catch (StorageException e) {
-            throw new DaoException(e);
+            throw new DaoException("Storage error while removing book", e);
         }
     }
 
     @Override
-    public List<Book> findAll() {
-        List<Book> books = BookStorage.getInstance().get();
-        return books;
+    public List<Book> findAll() throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            return books;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while finding all books", e);
+        }
     }
 
     @Override
-    public Optional<Book> findById(long id) {
-        List<Book> books = BookStorage.getInstance().get();
-        Optional<Book> filteredBooks = books.stream()
-                .filter(b -> b.getBookId() == id)
-                .findFirst();
-        return filteredBooks;
+    public Optional<Book> findById(long id) throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            Optional<Book> currentBook = books.stream()
+                    .filter(b -> b.getBookId() == id)
+                    .findFirst();
+            return currentBook;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while finding book by id", e);
+        }
     }
 
     @Override
-    public List<Book> findByName(String name) {
-        List<Book> books = BookStorage.getInstance().get();
-        List<Book> filteredBooks = books.stream()
-                .filter(b -> b.getName().equals(name))
-                .collect(Collectors.toList());
-        return filteredBooks;
+    public List<Book> findByName(String name) throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            List<Book> filteredBooks = books.stream()
+                    .filter(b -> b.getName().equals(name))
+                    .collect(Collectors.toList());
+            return filteredBooks;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while finding books by name", e);
+        }
     }
 
     @Override
-    public List<Book> findByPrice(Double price) {
-        List<Book> books = BookStorage.getInstance().get();
-        List<Book> filteredBooks = books.stream()
-                .filter(b -> b.getPrice() == price)
-                .collect(Collectors.toList());
-        return filteredBooks;
+    public List<Book> findByPrice(Double price) throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            List<Book> filteredBooks = books.stream()
+                    .filter(b -> b.getPrice() == price)
+                    .collect(Collectors.toList());
+            return filteredBooks;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while finding books by price", e);
+        }
     }
 
     @Override
-    public List<Book> findByPublishingHouse(String publishingHouse) {
-        List<Book> books = BookStorage.getInstance().get();
-        List<Book> filteredBooks = books.stream()
-                .filter(b -> b.getPublishingHouse().equals(publishingHouse))
-                .collect(Collectors.toList());
-        return filteredBooks;
+    public List<Book> findByPublishingHouse(String publishingHouse)
+            throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            List<Book> filteredBooks = books.stream()
+                    .filter(b -> b.getPublishingHouse().equals(publishingHouse))
+                    .collect(Collectors.toList());
+            return filteredBooks;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while finding books by publishing house", e);
+        }
     }
 
     @Override
-    public List<Book> findByAuthor(String author) {
-        List<Book> books = BookStorage.getInstance().get();
-        List<Book> filteredBooks = books.stream()
-                .filter(b -> b.getAuthors().stream()
-                        .anyMatch(currentAuthor -> currentAuthor.equals(author)))
-                .collect(Collectors.toList());
-        return filteredBooks;
+    public List<Book> findByAuthor(String author) throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            List<Book> filteredBooks = books.stream()
+                    .filter(b -> b.getAuthors().stream()
+                            .anyMatch(a -> a.equals(author)))
+                    .collect(Collectors.toList());
+            return filteredBooks;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while finding books by author", e);
+        }
     }
 
     @Override
-    public List<Book> sortById() {
-        List<Book> books = BookStorage.getInstance().get();
-        List<Book> sortedBooks = books.stream()
-                .sorted(Comparator.comparing(b -> b.getBookId()))
-                .collect(Collectors.toList());
-        return sortedBooks;
+    public List<Book> sortById() throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            List<Book> sortedBooks = books.stream()
+                    .sorted(Comparator.comparing(b -> b.getBookId()))
+                    .collect(Collectors.toList());
+            return sortedBooks;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while sorting books by id", e);
+        }
     }
 
     @Override
-    public List<Book> sortByName() {
-        List<Book> books = BookStorage.getInstance().get();
-        List<Book> sortedBooks = books.stream()
-                .sorted(Comparator.comparing(b -> b.getName()))
-                .collect(Collectors.toList());
-        return sortedBooks;
+    public List<Book> sortByName() throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            List<Book> sortedBooks = books.stream()
+                    .sorted(Comparator.comparing(b -> b.getName()))
+                    .collect(Collectors.toList());
+            return sortedBooks;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while sorting books by name", e);
+        }
     }
 
     @Override
-    public List<Book> sortByPrice() {
-        List<Book> books = BookStorage.getInstance().get();
-        List<Book> sortedBooks = books.stream()
-                .sorted(Comparator.comparing(b -> b.getPrice()))
-                .collect(Collectors.toList());
-        return sortedBooks;
+    public List<Book> sortByPrice() throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            List<Book> sortedBooks = books.stream()
+                    .sorted(Comparator.comparing(b -> b.getPrice()))
+                    .collect(Collectors.toList());
+            return sortedBooks;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while sorting books by price", e);
+        }
     }
 
     @Override
-    public List<Book> sortByPublishingHouse() {
-        List<Book> books = BookStorage.getInstance().get();
-        List<Book> sortedBooks = books.stream()
-                .sorted(Comparator.comparing(b -> b.getPublishingHouse()))
-                .collect(Collectors.toList());
-        return sortedBooks;
+    public List<Book> sortByPublishingHouse() throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            List<Book> sortedBooks = books.stream()
+                    .sorted(Comparator.comparing(b -> b.getPublishingHouse()))
+                    .collect(Collectors.toList());
+            return sortedBooks;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while sorting books by publishing house", e);
+        }
     }
 
     @Override
-    public List<Book> sortByAuthors() {
-        List<Book> books = BookStorage.getInstance().get();
-        List<Book> sortedBooks = books.stream()
-                .sorted(Comparator.comparing(b -> b.getAuthors().size()))
-                .collect(Collectors.toList());
-        return sortedBooks;
+    public List<Book> sortByAuthors() throws DaoException {
+        BookStorage storage = BookStorage.getInstance();
+        try {
+            List<Book> books = storage.get();
+            List<Book> sortedBooks = books.stream()
+                    .sorted(Comparator.comparing(b -> b.getAuthors().size()))
+                    .collect(Collectors.toList());
+            return sortedBooks;
+        } catch (StorageException e) {
+            throw new DaoException("Storage error while sorting books by authors", e);
+        }
     }
 }

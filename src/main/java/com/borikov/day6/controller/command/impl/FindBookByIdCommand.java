@@ -28,7 +28,7 @@ public class FindBookByIdCommand implements Command {
                 } else {
                     id = Long.parseLong(data.get(ID));
                 }
-                Book book = bookService.findBookByIdInLibrary(id);
+                Book book = bookService.findBookById(id);
                 filteredBook = new ArrayList<>();
                 filteredBook.add(book);
             } catch (ServiceException | NumberFormatException e) {

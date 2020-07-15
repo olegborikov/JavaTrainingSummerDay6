@@ -14,7 +14,7 @@ public class FindAllBooksCommand implements Command {
     @Override
     public Map<String, List<Book>> execute(Map<String, String> data) {
         BookService bookService = new BookService();
-        List<Book> books = bookService.findAllBooksInLibrary();
+        List<Book> books = bookService.findAllBooks();
         Map<String, List<Book>> response = new HashMap<>();
         response.put(ALL_BOOKS, books);
         return response;

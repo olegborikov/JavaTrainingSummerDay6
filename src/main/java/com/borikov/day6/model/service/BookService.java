@@ -6,133 +6,199 @@ import com.borikov.day6.exception.DaoException;
 import com.borikov.day6.exception.ServiceException;
 import com.borikov.day6.validator.BookValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class BookService {
-    private BookListDaoImpl bookDao;
-
-    public void addBookInLibrary(Book book) throws ServiceException {
+    public List<Book> addBook(Book book) throws ServiceException {
         BookValidator bookValidator = new BookValidator();
+        List<Book> addedBook;
         if (book == null ||
                 !bookValidator.isIdCorrect(book.getBookId()) ||
                 !bookValidator.isNameCorrect(book.getName()) ||
                 !bookValidator.isPriceCorrect(book.getPrice()) ||
                 !bookValidator.isPublishingHouseCorrect(book.getPublishingHouse()) ||
                 !bookValidator.isAuthorsCorrect(book.getAuthors())) {
-            throw new ServiceException("Book data is incorrect");
+            addedBook = new ArrayList<>();
+        } else {
+            try {
+                BookListDaoImpl bookListDao = new BookListDaoImpl();
+                bookListDao.add(book);
+                addedBook = new ArrayList<>();
+                addedBook.add(book);
+            } catch (DaoException e) {
+                throw new ServiceException("Adding book error", e);
+            }
         }
-        BookListDaoImpl bookDao = new BookListDaoImpl();
+        return addedBook;
+    }
+
+    public List<Book> removeBook(Book book) throws ServiceException {
+        BookValidator bookValidator = new BookValidator();
+        List<Book> removedBook;
+        if (book == null ||
+                !bookValidator.isIdCorrect(book.getBookId()) ||
+                !bookValidator.isNameCorrect(book.getName()) ||
+                !bookValidator.isPriceCorrect(book.getPrice()) ||
+                !bookValidator.isPublishingHouseCorrect(book.getPublishingHouse()) ||
+                !bookValidator.isAuthorsCorrect(book.getAuthors())) {
+            removedBook = new ArrayList<>();
+        } else {
+            try {
+                BookListDaoImpl bookListDao = new BookListDaoImpl();
+                bookListDao.remove(book);
+                removedBook = new ArrayList<>();
+                removedBook.add(book);
+            } catch (DaoException e) {
+                throw new ServiceException("Removing book error", e);
+            }
+        }
+        return removedBook;
+    }
+
+    public List<Book> findAllBooks() throws ServiceException {
         try {
-            bookDao.add(book);
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
+            List<Book> books = bookListDao.findAll();
+            return books;
         } catch (DaoException e) {
-            throw new ServiceException("Adding book error", e);
+            throw new ServiceException("Finding all books error", e);
         }
     }
 
-    public void removeBookFromLibrary(Book book) throws ServiceException {
-        if (book == null) {
-            throw new ServiceException("Book data is incorrect");
-        }
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        try {
-            bookDao.remove(book);
-        } catch (DaoException e) {
-            throw new ServiceException("Removing book error", e);
-        }
-    }
-
-    public List<Book> findAllBooksInLibrary() {
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        List<Book> books = bookDao.findAll();
-        return books;
-    }
-
-    public Book findBookByIdInLibrary(long id)
+    public Optional<Book> findBookById(long id)
             throws ServiceException {
         BookValidator bookValidator = new BookValidator();
+        Optional<Book> currentBook;
         if (!bookValidator.isIdCorrect(id)) {
-            throw new ServiceException("Book id is incorrect");
+            currentBook = Optional.empty();
+        } else {
+            try {
+                BookListDaoImpl bookListDao = new BookListDaoImpl();
+                currentBook = bookListDao.findById(id);
+            } catch (DaoException e) {
+                throw new ServiceException("Finding book by id error", e);
+            }
         }
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        Optional<Book> filteredBook = bookDao.findById(id);
-        if (filteredBook.isEmpty()) {
-            throw new ServiceException("no such element");
-        }
-        return filteredBook.get();
+        return currentBook;
     }
 
-    public List<Book> findBooksByNameInLibrary(String name)
+    public List<Book> findBooksByName(String name)
             throws ServiceException {
         BookValidator bookValidator = new BookValidator();
+        List<Book> filteredBooks;
         if (!bookValidator.isNameCorrect(name)) {
-            throw new ServiceException("Book name is incorrect");
+            filteredBooks = new ArrayList<>();
+        } else {
+            try {
+                BookListDaoImpl bookListDao = new BookListDaoImpl();
+                filteredBooks = bookListDao.findByName(name);
+            } catch (DaoException e) {
+                throw new ServiceException("Finding books by name error", e);
+            }
         }
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        List<Book> filteredBooks = bookDao.findByName(name);
         return filteredBooks;
     }
 
-    public List<Book> findBooksByPriceInLibrary(Double price)
+    public List<Book> findBooksByPrice(Double price)
             throws ServiceException {
         BookValidator bookValidator = new BookValidator();
+        List<Book> filteredBooks;
         if (!bookValidator.isPriceCorrect(price)) {
-            throw new ServiceException("Book price is incorrect");
+            filteredBooks = new ArrayList<>();
+        } else {
+            try {
+                BookListDaoImpl bookListDao = new BookListDaoImpl();
+                filteredBooks = bookListDao.findByPrice(price);
+            } catch (DaoException e) {
+                throw new ServiceException("Finding books by price error", e);
+            }
         }
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        List<Book> filteredBooks = bookDao.findByPrice(price);
         return filteredBooks;
     }
 
-    public List<Book> findBooksByPublishingHouseInLibrary(String publishingHouse)
+    public List<Book> findBooksByPublishingHouse(String publishingHouse)
             throws ServiceException {
         BookValidator bookValidator = new BookValidator();
+        List<Book> filteredBooks;
         if (!bookValidator.isPublishingHouseCorrect(publishingHouse)) {
-            throw new ServiceException("Book publishing house is incorrect");
+            filteredBooks = new ArrayList<>();
+        } else {
+            try {
+                BookListDaoImpl bookListDao = new BookListDaoImpl();
+                filteredBooks = bookListDao.findByPublishingHouse(publishingHouse);
+            } catch (DaoException e) {
+                throw new ServiceException("Finding books by publishing house error", e);
+            }
         }
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        List<Book> filteredBooks = bookDao.findByPublishingHouse(publishingHouse);
         return filteredBooks;
     }
 
-    public List<Book> findBooksByAuthorInLibrary(String author)
+    public List<Book> findBooksByAuthor(String author)
             throws ServiceException {
         BookValidator bookValidator = new BookValidator();
+        List<Book> filteredBooks;
         if (!bookValidator.isAuthorCorrect(author)) {
-            throw new ServiceException("Book author is incorrect");
+            filteredBooks = new ArrayList<>();
+        } else {
+            try {
+                BookListDaoImpl bookListDao = new BookListDaoImpl();
+                filteredBooks = bookListDao.findByAuthor(author);
+            } catch (DaoException e) {
+                throw new ServiceException("Finding books by author error", e);
+            }
         }
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        List<Book> filteredBooks = bookDao.findByAuthor(author);
         return filteredBooks;
     }
 
-    public List<Book> sortBooksByIdInLibrary() {
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        List<Book> sortedBooks = bookDao.sortById();
-        return sortedBooks;
+    public List<Book> sortBooksById() throws ServiceException {
+        try {
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
+            List<Book> sortedBooks = bookListDao.sortById();
+            return sortedBooks;
+        } catch (DaoException e) {
+            throw new ServiceException("Sorting books by id error", e);
+        }
     }
 
-    public List<Book> sortBooksByNameInLibrary() {
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        List<Book> sortedBooks = bookDao.sortByName();
-        return sortedBooks;
+    public List<Book> sortBooksByName() throws ServiceException {
+        try {
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
+            List<Book> sortedBooks = bookListDao.sortByName();
+            return sortedBooks;
+        } catch (DaoException e) {
+            throw new ServiceException("Sorting books by name error", e);
+        }
     }
 
-    public List<Book> sortBooksByPriceInLibrary() {
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        List<Book> sortedBooks = bookDao.sortByPrice();
-        return sortedBooks;
+    public List<Book> sortBooksByPrice() throws ServiceException {
+        try {
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
+            List<Book> sortedBooks = bookListDao.sortByPrice();
+            return sortedBooks;
+        } catch (DaoException e) {
+            throw new ServiceException("Sorting books by price error", e);
+        }
     }
 
-    public List<Book> sortBooksByPublishingHouseInLibrary() {
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        List<Book> sortedBooks = bookDao.sortByPublishingHouse();
-        return sortedBooks;
+    public List<Book> sortBooksByPublishingHouse() throws ServiceException {
+        try {
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
+            List<Book> sortedBooks = bookListDao.sortByPublishingHouse();
+            return sortedBooks;
+        } catch (DaoException e) {
+            throw new ServiceException("Sorting books by publishing house error", e);
+        }
     }
 
-    public List<Book> sortBooksByAuthorsInLibrary() {
-        BookListDaoImpl bookDao = new BookListDaoImpl();
-        List<Book> sortedBooks = bookDao.sortByAuthors();
-        return sortedBooks;
+    public List<Book> sortBooksByAuthors() throws ServiceException {
+        try {
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
+            List<Book> sortedBooks = bookListDao.sortByAuthors();
+            return sortedBooks;
+        } catch (DaoException e) {
+            throw new ServiceException("Sorting books by authors error", e);
+        }
     }
 }

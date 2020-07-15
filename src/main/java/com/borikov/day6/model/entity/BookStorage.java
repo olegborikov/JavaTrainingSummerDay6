@@ -29,7 +29,7 @@ public class BookStorage {
         return Collections.unmodifiableList(books);
     }
 
-    public boolean add(Book book) throws StorageException {
+    public void add(Book book) throws StorageException {
         if (books == null) {
             throw new StorageException("There is no book storage");
         }
@@ -39,17 +39,17 @@ public class BookStorage {
         if (books.size() >= MAX_CAPACITY) {
             throw new StorageException("Book storage is overflowed");
         }
-        return books.add(book);
+        books.add(book);
     }
 
-    public boolean remove(Book book) throws StorageException {
+    public void remove(Book book) throws StorageException {
         if (books == null) {
             throw new StorageException("There is no book storage");
         }
         if (!books.contains(book)) {
             throw new StorageException("No such book in storage");
         }
-        return books.remove(book);
+        books.remove(book);
     }
 
     public void reset() throws StorageException {

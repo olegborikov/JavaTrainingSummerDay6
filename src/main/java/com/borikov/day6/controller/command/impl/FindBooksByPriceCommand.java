@@ -28,7 +28,7 @@ public class FindBooksByPriceCommand implements Command {
                 } else {
                     price = Double.parseDouble(data.get(PRICE));
                 }
-                filteredBooks = bookService.findBooksByPriceInLibrary(price);
+                filteredBooks = bookService.findBooksByPrice(price);
             } catch (ServiceException | NumberFormatException e) {
                 filteredBooks = new ArrayList<>();
             }

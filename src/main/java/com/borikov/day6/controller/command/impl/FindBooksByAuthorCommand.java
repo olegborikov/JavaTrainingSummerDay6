@@ -23,7 +23,7 @@ public class FindBooksByAuthorCommand implements Command {
         } else {
             try {
                 String author = data.get(AUTHOR);
-                filteredBooks = bookService.findBooksByAuthorInLibrary(author);
+                filteredBooks = bookService.findBooksByAuthor(author);
             } catch (ServiceException e) {
                 filteredBooks = new ArrayList<>();
             }
