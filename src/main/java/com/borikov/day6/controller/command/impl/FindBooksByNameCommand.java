@@ -1,9 +1,10 @@
 package com.borikov.day6.controller.command.impl;
 
 import com.borikov.day6.controller.command.Command;
+import com.borikov.day6.controller.command.impl.constant.KeyType;
 import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.exception.ServiceException;
-import com.borikov.day6.model.service.BookService;
+import com.borikov.day6.model.service.impl.BookServiceImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,26 +12,20 @@ import java.util.List;
 import java.util.Map;
 
 public class FindBooksByNameCommand implements Command {
-
-    private static final String NAME = "name";
-    private static final String FILTERED_BOOK = "filteredBooks";
-
     @Override
     public Map<String, List<Book>> execute(Map<String, String> data) {
-        BookService bookService = new BookService();
-        List<Book> filteredBooks;
-        if (data == null) {
-            filteredBooks = new ArrayList<>();
-        } else {
+        BookServiceImpl bookService = new BookServiceImpl();
+        List<Book> filteredBooks = new ArrayList<>();
+        if (data != null) {
             try {
-                String name = data.get(NAME);
+                String name = data.get(KeyType.NAME);
                 filteredBooks = bookService.findBooksByName(name);
             } catch (ServiceException e) {
-                filteredBooks = new ArrayList<>();
+                e.printStackTrace();
             }
         }
         Map<String, List<Book>> response = new HashMap<>();
-        response.put(FILTERED_BOOK, filteredBooks);
+        response.put(KeyType.FILTERED_BOOK, filteredBooks);
         return response;
     }
 }

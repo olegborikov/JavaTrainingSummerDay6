@@ -1,9 +1,10 @@
 package com.borikov.day6.controller.command.impl;
 
 import com.borikov.day6.controller.command.Command;
+import com.borikov.day6.controller.command.impl.constant.KeyType;
 import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.exception.ServiceException;
-import com.borikov.day6.model.service.BookService;
+import com.borikov.day6.model.service.impl.BookServiceImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,32 +12,24 @@ import java.util.List;
 import java.util.Map;
 
 public class RemoveBookCommand implements Command {
-    private static final String NAME = "name";
-    private static final String PRICE = "price";
-    private static final String PUBLISHING_HOUSE = "publishingHouse";
-    private static final String AUTHOR = "author";
-    private int authorNumber = 1;
-    private static final String REMOVED_BOOK = "removedBook";
-
     @Override
     public Map<String, List<Book>> execute(Map<String, String> data) {
-        BookService bookService = new BookService();
-        List<Book> removedBook;
-        if(data == null){
-            removedBook = new ArrayList<>();
-        }else{
+        BookServiceImpl bookService = new BookServiceImpl();
+        List<Book> removedBook = new ArrayList<>();
+        if (data != null) {
             try {
-                String name = data.get(NAME);
+                String name = data.get(KeyType.NAME);
                 double price;
-                if (data.get(PRICE) == null) {
+                if (data.get(KeyType.PRICE) == null) {
                     price = -1;
                 } else {
-                    price = Double.parseDouble(data.get(PRICE));
+                    price = Double.parseDouble(data.get(KeyType.PRICE));
                 }
-                String publishingHouse = data.get(PUBLISHING_HOUSE);
+                String publishingHouse = data.get(KeyType.PUBLISHING_HOUSE);
+                int authorNumber = 1;
                 List<String> authors = new ArrayList<>();
-                while (data.get(AUTHOR + authorNumber) != null) {
-                    authors.add(data.get(AUTHOR + authorNumber));
+                while (data.get(KeyType.AUTHOR + authorNumber) != null) {
+                    authors.add(data.get(KeyType.AUTHOR + authorNumber));
                     authorNumber++;
                 }
                 Book book = new Book(name, price, publishingHouse, authors);
@@ -44,11 +37,11 @@ public class RemoveBookCommand implements Command {
                 removedBook = new ArrayList<>();
                 removedBook.add(book);
             } catch (ServiceException | NumberFormatException e) {
-                removedBook = new ArrayList<>();
+                e.printStackTrace();
             }
         }
         Map<String, List<Book>> response = new HashMap<>();
-        response.put(REMOVED_BOOK, removedBook);
+        response.put(KeyType.REMOVED_BOOK, removedBook);
         return response;
     }
 }

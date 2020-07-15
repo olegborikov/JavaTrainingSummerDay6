@@ -9,7 +9,7 @@ public class BookValidator {
     private static final long MAX_ID = 100_000;
     private static final int MAX_STRING_LENGTH = 40;
     private static final int MIN__STRING_LENGTH = 1;
-    private static final int MAX_AUTHORS_AMOUNT = 10;
+    private static final int MAX_AUTHORS_AMOUNT = 5;
 
     public boolean isIdCorrect(long id) {
         boolean result = true;

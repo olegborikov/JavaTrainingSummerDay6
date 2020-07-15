@@ -1,17 +1,5 @@
 package test.borikov.day6.model.service;
 
-import com.borikov.day6.model.entity.Book;
-import com.borikov.day6.model.entity.BookStorage;
-import com.borikov.day6.exception.ServiceException;
-import com.borikov.day6.model.service.BookService;
-import test.borikov.day6.creator.BookStorageCreator;
-import org.testng.annotations.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.testng.Assert.*;
-
 public class BookServiceTest {
  /*   private BookStorage bookStorage;
     private BookService bookService;
