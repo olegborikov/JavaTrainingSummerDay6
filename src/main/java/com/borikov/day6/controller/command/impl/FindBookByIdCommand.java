@@ -17,10 +17,9 @@ public class FindBookByIdCommand implements Command {
         if (!(data == null || data.get(KeyType.ID) == null)) {
             try {
                 long id = Long.parseLong(data.get(KeyType.ID));
-                Optional<Book> currentBook = bookService.findBookById(id);
-                currentBook.ifPresent(b -> filteredBook.add(b));
+                filteredBook = bookService.findBookById(id);
             } catch (ServiceException | NumberFormatException e) {
-                e.printStackTrace();
+                e.printStackTrace();// TODO: 16.07.2020 log or command exception?
             }
         }
         Map<String, List<Book>> response = new HashMap<>();

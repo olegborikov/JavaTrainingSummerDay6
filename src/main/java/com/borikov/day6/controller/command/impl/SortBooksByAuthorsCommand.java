@@ -20,7 +20,7 @@ public class SortBooksByAuthorsCommand implements Command {
             BookServiceImpl bookService = new BookServiceImpl();
            sortedBooks = bookService.sortBooksByAuthors();
         } catch (ServiceException e) {
-            e.printStackTrace();
+            e.printStackTrace();// TODO: 16.07.2020 log or command exception?
         }
         Map<String, List<Book>> response = new HashMap<>();
         response.put(KeyType.SORTED_BOOKS, sortedBooks);

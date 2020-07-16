@@ -21,7 +21,7 @@ public class FindBooksByPublishingHouseCommand implements Command {
                 String publishingHouse = data.get(KeyType.PUBLISHING_HOUSE);
                 filteredBooks = bookService.findBooksByPublishingHouse(publishingHouse);
             } catch (ServiceException e) {
-                e.printStackTrace();
+                e.printStackTrace();// TODO: 16.07.2020 log or command exception?
             }
         }
         Map<String, List<Book>> response = new HashMap<>();

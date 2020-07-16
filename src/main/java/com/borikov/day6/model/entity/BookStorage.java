@@ -22,6 +22,10 @@ public class BookStorage {
         return instance;
     }
 
+    public void set(List<Book> books) {
+        this.books = books;
+    }
+
     public List<Book> get() throws StorageException {
         if (books == null) {
             throw new StorageException("There is no book storage");
@@ -33,11 +37,11 @@ public class BookStorage {
         if (books == null) {
             throw new StorageException("There is no book storage");
         }
-        if (books.contains(book)) {
-            throw new StorageException("Book already in storage");
-        }
         if (books.size() >= MAX_CAPACITY) {
             throw new StorageException("Book storage is overflowed");
+        }
+        if (books.contains(book)) {
+            throw new StorageException("Book already in storage");
         }
         books.add(book);
     }
@@ -50,12 +54,5 @@ public class BookStorage {
             throw new StorageException("No such book in storage");
         }
         books.remove(book);
-    }
-
-    public void reset() throws StorageException {
-        if (books == null) {
-            throw new StorageException("There is no book storage");
-        }
-        books = new ArrayList<>();
     }
 }

@@ -16,12 +16,12 @@ public class BookServiceImpl implements BookService {
     public List<Book> addBook(Book book) throws ServiceException {
         BookValidator bookValidator = new BookValidator();
         List<Book> addedBook = new ArrayList<>();
-        if (book != null ||
-                bookValidator.isIdCorrect(book.getBookId()) ||
-                bookValidator.isNameCorrect(book.getName()) ||
-                bookValidator.isPriceCorrect(book.getPrice()) ||
-                bookValidator.isPublishingHouseCorrect(book.getPublishingHouse()) ||
-                bookValidator.isAuthorsCorrect(book.getAuthors())) {
+        if (!(book == null ||
+                !bookValidator.isIdCorrect(book.getBookId()) ||
+                !bookValidator.isNameCorrect(book.getName()) ||
+                !bookValidator.isPriceCorrect(book.getPrice()) ||
+                !bookValidator.isPublishingHouseCorrect(book.getPublishingHouse()) ||
+                !bookValidator.isAuthorsCorrect(book.getAuthors()))) {
             try {
                 BookListDaoImpl bookListDao = new BookListDaoImpl();
                 bookListDao.add(book);
@@ -35,14 +35,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> removeBook(Book book) throws ServiceException {
-        BookValidator bookValidator = new BookValidator();
         List<Book> removedBook = new ArrayList<>();
-        if (book != null ||
-                bookValidator.isIdCorrect(book.getBookId()) ||
-                bookValidator.isNameCorrect(book.getName()) ||
-                bookValidator.isPriceCorrect(book.getPrice()) ||
-                bookValidator.isPublishingHouseCorrect(book.getPublishingHouse()) ||
-                bookValidator.isAuthorsCorrect(book.getAuthors())) {
+        if (book != null) {
             try {
                 BookListDaoImpl bookListDao = new BookListDaoImpl();
                 bookListDao.remove(book);
@@ -66,19 +60,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> findBookById(long id)
+    public List<Book> findBookById(long id)
             throws ServiceException {
         BookValidator bookValidator = new BookValidator();
-        Optional<Book> currentBook = Optional.empty();
+        List<Book> filteredBook = new ArrayList<>();
         if (bookValidator.isIdCorrect(id)) {
             try {
                 BookListDaoImpl bookListDao = new BookListDaoImpl();
-                currentBook = bookListDao.findById(id);
+                Optional<Book> currentBook = bookListDao.findById(id);
+                currentBook.ifPresent(b -> filteredBook.add(b));
             } catch (DaoException e) {
                 throw new ServiceException("Finding book by id error", e);
             }
         }
-        return currentBook;
+        return filteredBook;
     }
 
     @Override
@@ -123,7 +118,8 @@ public class BookServiceImpl implements BookService {
                 BookListDaoImpl bookListDao = new BookListDaoImpl();
                 filteredBooks = bookListDao.findByPublishingHouse(publishingHouse);
             } catch (DaoException e) {
-                throw new ServiceException("Finding books by publishing house error", e);
+                throw new ServiceException("Finding books by " +
+                        "publishing house error", e);
             }
         }
         return filteredBooks;

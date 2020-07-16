@@ -1,8 +1,8 @@
 package test.borikov.day6.controller;
 
 import com.borikov.day6.controller.BookController;
+import com.borikov.day6.controller.command.impl.constant.KeyType;
 import com.borikov.day6.model.entity.Book;
-import com.borikov.day6.model.entity.BookStorage;
 import test.borikov.day6.creator.BookStorageCreator;
 import org.testng.annotations.*;
 
@@ -14,12 +14,10 @@ import java.util.Map;
 import static org.testng.Assert.*;
 
 public class BookControllerTest {
-   /* private BookStorage bookStorage;
     private BookController bookController;
 
     @BeforeClass
     public void setUpClass() {
-        bookStorage = BookStorage.getInstance();
         bookController = new BookController();
         BookStorageCreator.setUpBookStorage();
     }
@@ -27,13 +25,10 @@ public class BookControllerTest {
     @AfterClass
     public void tearDownClass() {
         bookController = null;
-        bookStorage.reset();
-        bookStorage = null;
     }
 
     @AfterMethod()
     public void tearDownMethod() {
-        bookStorage.reset();
         BookStorageCreator.setUpBookStorage();
     }
 
@@ -52,7 +47,7 @@ public class BookControllerTest {
         };
     }
 
-    @Test(dataProvider = "processRequestNegativeData")
+    @Test(dataProvider = "processRequestNegativeData", enabled = false)
     public void processRequestNegativeTest(String request,
                                                   Map<String, String> data,
                                                   Map<String, List<Book>> expected) {
@@ -92,13 +87,13 @@ public class BookControllerTest {
         };
     }
 
-    @Test(dataProvider = "processRequestAddBookPositiveData")
+    @Test(dataProvider = "processRequestAddBookPositiveData", enabled = false)
     public void processRequestAddBookPositiveTest(String request,
                                                   Map<String, String> data,
                                                   Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
         List<Book> addedBook = new ArrayList<>();
-        addedBook.add(bookStorage.get().get(bookStorage.get().size() - 1));
+        //addedBook.add(bookStorage.get().get(bookStorage.get().size() - 1));
         expected.put("addedBook", addedBook);
         assertEquals(actual, expected);
     }
@@ -128,7 +123,7 @@ public class BookControllerTest {
         };
     }
 
-    @Test(dataProvider = "processRequestAddBookNegativeData")
+    @Test(dataProvider = "processRequestAddBookNegativeData", enabled = false)
     public void processRequestAddBookNegativeTest(String request,
                                                   Map<String, String> data,
                                                   Map<String, List<Book>> expected) {
@@ -144,7 +139,7 @@ public class BookControllerTest {
         Map<String, String> data3 = new HashMap<>();
         data3.put("first", "first");
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("allBooks", BookStorageCreator.getCreatedBooks());
+        expected.put(KeyType.ALL_BOOKS, BookStorageCreator.getCreatedBooks());
         return new Object[][]{
                 {request, data1, expected},
                 {request, data2, expected},
@@ -202,7 +197,7 @@ public class BookControllerTest {
         Map<String, List<Book>> expected3 = new HashMap<>();
         List<Book> filteredBook3 = new ArrayList<>();
         filteredBook3.add(BookStorageCreator.getCreatedBooks().get(3));
-        expected3.put("filteredBook", filteredBook3);
+        expected3.put(KeyType.FILTERED_BOOK, filteredBook3);
         return new Object[][]{
                 {request, data1, expected1},
                 {request, data2, expected2},
@@ -227,7 +222,7 @@ public class BookControllerTest {
         Map<String, String> data3 = new HashMap<>();
         data3.put("id", "100001");
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("filteredBook", new ArrayList<>());
+        expected.put(KeyType.FILTERED_BOOK, new ArrayList<>());
         return new Object[][]{
                 {request, data1, expected},
                 {request, data2, expected},
@@ -267,10 +262,14 @@ public class BookControllerTest {
         filteredBook3.add(BookStorageCreator.getCreatedBooks().get(3));
         filteredBook3.add(BookStorageCreator.getCreatedBooks().get(5));
         expected3.put("filteredBooks", filteredBook3);
+        List<Book> filteredBook4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(KeyType.FILTERED_BOOKS, filteredBook4);
         return new Object[][]{
                 {request, data1, expected1},
                 {request, data2, expected2},
-                {request, data3, expected3}
+                {request, data3, expected3},
+                {request, null, expected4}
         };
     }
 
@@ -291,7 +290,7 @@ public class BookControllerTest {
         Map<String, String> data3 = new HashMap<>();
         data3.put("author", "Olegewqe qwe qwe qwe qwe qwe qwe qw eqwe qw eewq ");
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("filteredBooks", new ArrayList<>());
+        expected.put(KeyType.FILTERED_BOOKS, new ArrayList<>());
         return new Object[][]{
                 {request, data1, expected},
                 {request, data2, expected},
@@ -556,5 +555,5 @@ public class BookControllerTest {
                                                      Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
         assertEquals(actual, expected);
-    }*/
+    }
 }

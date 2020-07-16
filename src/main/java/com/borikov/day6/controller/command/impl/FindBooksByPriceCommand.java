@@ -21,7 +21,7 @@ public class FindBooksByPriceCommand implements Command {
                 double price = Double.parseDouble(data.get(KeyType.PRICE));
                 filteredBooks = bookService.findBooksByPrice(price);
             } catch (ServiceException | NumberFormatException e) {
-                e.printStackTrace();
+                e.printStackTrace();// TODO: 16.07.2020 log or command exception?
             }
         }
         Map<String, List<Book>> response = new HashMap<>();

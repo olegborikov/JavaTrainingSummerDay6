@@ -12,4 +12,7 @@ public class KeyType {
     public static final String FILTERED_BOOKS = "filteredBooks";
     public static final String REMOVED_BOOK = "removedBook";
     public static final String SORTED_BOOKS = "sortedBook";
+
+    private KeyType() {
+    }
 }

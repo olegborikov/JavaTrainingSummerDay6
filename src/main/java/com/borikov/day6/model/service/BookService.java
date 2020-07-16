@@ -4,7 +4,6 @@ import com.borikov.day6.exception.ServiceException;
 import com.borikov.day6.model.entity.Book;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BookService {
     List<Book> addBook(Book book) throws ServiceException;
@@ -13,7 +12,7 @@ public interface BookService {
 
     List<Book> findAllBooks() throws ServiceException;
 
-    Optional<Book> findBookById(long id) throws ServiceException;
+    List<Book> findBookById(long id) throws ServiceException;
 
     List<Book> findBooksByName(String name) throws ServiceException;
 

@@ -14,15 +14,11 @@ public class BookStorageCreator {
     }
 
     public static void setUpBookStorage() {
-       /* BookStorage bookStorage = BookStorage.getInstance();
+        BookStorage bookStorage = BookStorage.getInstance();
         if (books == null) {
             createBooks();
         }
-        if (bookStorage.get().isEmpty()) {
-            for (Book book : books) {
-                bookStorage.add(book);
-            }
-        }*/
+        bookStorage.set(new ArrayList<>(books));
     }
 
     public static List<Book> getCreatedBooks() {

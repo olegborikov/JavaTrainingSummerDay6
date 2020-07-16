@@ -37,7 +37,7 @@ public class RemoveBookCommand implements Command {
                 removedBook = new ArrayList<>();
                 removedBook.add(book);
             } catch (ServiceException | NumberFormatException e) {
-                e.printStackTrace();
+                e.printStackTrace();// TODO: 16.07.2020 log or command exception?
             }
         }
         Map<String, List<Book>> response = new HashMap<>();

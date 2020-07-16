@@ -67,7 +67,8 @@ public class BookListDaoImpl implements BookListDao {
                     .collect(Collectors.toList());
             return filteredBooks;
         } catch (StorageException e) {
-            throw new DaoException("Storage error while finding books by name", e);
+            throw new DaoException("Storage error while finding books " +
+                    "by name", e);
         }
     }
 
@@ -81,7 +82,8 @@ public class BookListDaoImpl implements BookListDao {
                     .collect(Collectors.toList());
             return filteredBooks;
         } catch (StorageException e) {
-            throw new DaoException("Storage error while finding books by price", e);
+            throw new DaoException("Storage error while finding books " +
+                    "by price", e);
         }
     }
 
@@ -96,7 +98,8 @@ public class BookListDaoImpl implements BookListDao {
                     .collect(Collectors.toList());
             return filteredBooks;
         } catch (StorageException e) {
-            throw new DaoException("Storage error while finding books by publishing house", e);
+            throw new DaoException("Storage error while finding books " +
+                    "by publishing house", e);
         }
     }
 
@@ -111,7 +114,8 @@ public class BookListDaoImpl implements BookListDao {
                     .collect(Collectors.toList());
             return filteredBooks;
         } catch (StorageException e) {
-            throw new DaoException("Storage error while finding books by author", e);
+            throw new DaoException("Storage error while finding books " +
+                    "by author", e);
         }
     }
 
@@ -121,11 +125,12 @@ public class BookListDaoImpl implements BookListDao {
         try {
             List<Book> books = storage.get();
             List<Book> sortedBooks = books.stream()
-                    .sorted(Comparator.comparing(b -> b.getBookId()))
+                    .sorted(Comparator.comparingLong(b -> b.getBookId()))
                     .collect(Collectors.toList());
             return sortedBooks;
         } catch (StorageException e) {
-            throw new DaoException("Storage error while sorting books by id", e);
+            throw new DaoException("Storage error while sorting books " +
+                    "by id", e);
         }
     }
 
@@ -139,7 +144,8 @@ public class BookListDaoImpl implements BookListDao {
                     .collect(Collectors.toList());
             return sortedBooks;
         } catch (StorageException e) {
-            throw new DaoException("Storage error while sorting books by name", e);
+            throw new DaoException("Storage error while sorting books " +
+                    "by name", e);
         }
     }
 
@@ -149,11 +155,12 @@ public class BookListDaoImpl implements BookListDao {
         try {
             List<Book> books = storage.get();
             List<Book> sortedBooks = books.stream()
-                    .sorted(Comparator.comparing(b -> b.getPrice()))
+                    .sorted(Comparator.comparingDouble(b -> b.getPrice()))
                     .collect(Collectors.toList());
             return sortedBooks;
         } catch (StorageException e) {
-            throw new DaoException("Storage error while sorting books by price", e);
+            throw new DaoException("Storage error while sorting books " +
+                    "by price", e);
         }
     }
 
@@ -167,7 +174,8 @@ public class BookListDaoImpl implements BookListDao {
                     .collect(Collectors.toList());
             return sortedBooks;
         } catch (StorageException e) {
-            throw new DaoException("Storage error while sorting books by publishing house", e);
+            throw new DaoException("Storage error while sorting books " +
+                    "by publishing house", e);
         }
     }
 
@@ -177,11 +185,12 @@ public class BookListDaoImpl implements BookListDao {
         try {
             List<Book> books = storage.get();
             List<Book> sortedBooks = books.stream()
-                    .sorted(Comparator.comparing(b -> b.getAuthors().size()))
+                    .sorted(Comparator.comparingInt(b -> b.getAuthors().size()))
                     .collect(Collectors.toList());
             return sortedBooks;
         } catch (StorageException e) {
-            throw new DaoException("Storage error while sorting books by authors", e);
+            throw new DaoException("Storage error while sorting books " +
+                    "by authors", e);
         }
     }
 }
