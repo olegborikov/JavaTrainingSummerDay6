@@ -1,7 +1,8 @@
+/*
 package test.borikov.day6.controller;
 
 import com.borikov.day6.controller.BookController;
-import com.borikov.day6.controller.command.impl.constant.KeyType;
+import com.borikov.day6.controller.command.impl.constant.KeyTypeData;
 import com.borikov.day6.model.entity.Book;
 import test.borikov.day6.creator.BookStorageCreator;
 import org.testng.annotations.*;
@@ -139,7 +140,7 @@ public class BookControllerTest {
         Map<String, String> data3 = new HashMap<>();
         data3.put("first", "first");
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put(KeyType.ALL_BOOKS, BookStorageCreator.getCreatedBooks());
+        expected.put(KeyTypeData.ALL_BOOKS, BookStorageCreator.getCreatedBooks());
         return new Object[][]{
                 {request, data1, expected},
                 {request, data2, expected},
@@ -197,7 +198,7 @@ public class BookControllerTest {
         Map<String, List<Book>> expected3 = new HashMap<>();
         List<Book> filteredBook3 = new ArrayList<>();
         filteredBook3.add(BookStorageCreator.getCreatedBooks().get(3));
-        expected3.put(KeyType.FILTERED_BOOK, filteredBook3);
+        expected3.put(KeyTypeData.FILTERED_BOOK, filteredBook3);
         return new Object[][]{
                 {request, data1, expected1},
                 {request, data2, expected2},
@@ -222,7 +223,7 @@ public class BookControllerTest {
         Map<String, String> data3 = new HashMap<>();
         data3.put("id", "100001");
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put(KeyType.FILTERED_BOOK, new ArrayList<>());
+        expected.put(KeyTypeData.FILTERED_BOOK, new ArrayList<>());
         return new Object[][]{
                 {request, data1, expected},
                 {request, data2, expected},
@@ -264,7 +265,7 @@ public class BookControllerTest {
         expected3.put("filteredBooks", filteredBook3);
         List<Book> filteredBook4 = new ArrayList<>();
         Map<String, List<Book>> expected4 = new HashMap<>();
-        expected4.put(KeyType.FILTERED_BOOKS, filteredBook4);
+        expected4.put(KeyTypeData.FILTERED_BOOKS, filteredBook4);
         return new Object[][]{
                 {request, data1, expected1},
                 {request, data2, expected2},
@@ -290,7 +291,7 @@ public class BookControllerTest {
         Map<String, String> data3 = new HashMap<>();
         data3.put("author", "Olegewqe qwe qwe qwe qwe qwe qwe qw eqwe qw eewq ");
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put(KeyType.FILTERED_BOOKS, new ArrayList<>());
+        expected.put(KeyTypeData.FILTERED_BOOKS, new ArrayList<>());
         return new Object[][]{
                 {request, data1, expected},
                 {request, data2, expected},
@@ -557,3 +558,4 @@ public class BookControllerTest {
         assertEquals(actual, expected);
     }
 }
+*/

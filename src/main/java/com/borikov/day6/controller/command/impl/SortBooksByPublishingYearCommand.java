@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SortBooksByNameCommand implements Command {
+public class SortBooksByPublishingYearCommand implements Command {
 
     @Override
     public Map<String, List<Book>> execute(Map<String, String> data) {
         BookService bookService = new BookServiceImpl();
-        List<Book> sortedBooks = bookService.sortBooksByName();
+        List<Book> sortedBooks = bookService.sortBooksByPublishingYear();
         Map<String, List<Book>> response = new HashMap<>();
         response.put(KeyTypeResponse.SORTED_BOOKS, sortedBooks);
         return response;

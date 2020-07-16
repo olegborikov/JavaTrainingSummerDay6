@@ -1,10 +1,11 @@
 package com.borikov.day6.validator;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class BookValidator {
-    private static final double MIN_PRICE = 0.01;
-    private static final double MAX_PRICE = 1000.0;
+    private static final int MIN_PUBLISHING_YEAR = 0;
+    private static final int MAX_PUBLISHING_YEAR = Calendar.getInstance().get(Calendar.YEAR);
     private static final long MIN_ID = 1;
     private static final long MAX_ID = 100_000;
     private static final int MAX_STRING_LENGTH = 40;
@@ -29,9 +30,10 @@ public class BookValidator {
         return result;
     }
 
-    public boolean isPriceCorrect(double price) {
+    public boolean isPublishingYearCorrect(int publishingYear) {
         boolean result = true;
-        if (price < MIN_PRICE || price > MAX_PRICE) {
+        if (publishingYear < MIN_PUBLISHING_YEAR ||
+                publishingYear > MAX_PUBLISHING_YEAR) {
             result = false;
         }
         return result;

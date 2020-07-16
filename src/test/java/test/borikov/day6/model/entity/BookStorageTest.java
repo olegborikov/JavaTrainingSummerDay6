@@ -1,3 +1,4 @@
+/*
 package test.borikov.day6.model.entity;
 
 import com.borikov.day6.exception.StorageException;
@@ -252,3 +253,4 @@ public class BookStorageTest {
         bookStorage.remove(removeBook);
     }
 }
+*/

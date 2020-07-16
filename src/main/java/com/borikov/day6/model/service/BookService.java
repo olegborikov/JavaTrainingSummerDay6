@@ -6,30 +6,32 @@ import com.borikov.day6.model.entity.Book;
 import java.util.List;
 
 public interface BookService {
-    List<Book> addBook(Book book) throws ServiceException;
+    List<Book> addBook(String name, String publishingYear, String publishingHouse,
+                       List<String> authors) throws ServiceException;
 
-    List<Book> removeBook(Book book) throws ServiceException;
+    List<Book> removeBook(String name, String publishingYear,
+                          String publishingHouse,
+                          List<String> authors) throws ServiceException;
 
-    List<Book> findAllBooks() throws ServiceException;
+    List<Book> findAllBooks();
 
-    List<Book> findBookById(long id) throws ServiceException;
+    List<Book> findBookById(String id);
 
-    List<Book> findBooksByName(String name) throws ServiceException;
+    List<Book> findBooksByName(String name);
 
-    List<Book> findBooksByPrice(Double price) throws ServiceException;
+    List<Book> findBooksByPublishingYear(String publishingYear);
 
-    List<Book> findBooksByPublishingHouse(String publishingHouse)
-            throws ServiceException;
+    List<Book> findBooksByPublishingHouse(String publishingHouse);
 
-    List<Book> findBooksByAuthor(String author) throws ServiceException;
+    List<Book> findBooksByAuthor(String author);
 
-    List<Book> sortBooksById() throws ServiceException;
+    List<Book> sortBooksById();
 
-    List<Book> sortBooksByName() throws ServiceException;
+    List<Book> sortBooksByName();
 
-    List<Book> sortBooksByPrice() throws ServiceException;
+    List<Book> sortBooksByPublishingYear();
 
-    List<Book> sortBooksByPublishingHouse() throws ServiceException;
+    List<Book> sortBooksByPublishingHouse();
 
-    List<Book> sortBooksByAuthors() throws ServiceException;
+    List<Book> sortBooksByAuthors();
 }

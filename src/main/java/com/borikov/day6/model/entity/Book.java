@@ -8,15 +8,15 @@ import java.util.List;
 public class Book {
     private final long bookId;
     private String name;
-    private double price;
+    private int publishingYear;
     private String publishingHouse;
     private List<String> authors;
 
-    public Book(String name, double price, String publishingHouse,
+    public Book(String name, int publishingYear, String publishingHouse,
                 List<String> authors) {
         this.bookId = IdGenerator.generateId();
         this.name = name;
-        this.price = price;
+        this.publishingYear = publishingYear;
         this.publishingHouse = publishingHouse;
         this.authors = authors;
     }
@@ -33,12 +33,12 @@ public class Book {
         this.name = name;
     }
 
-    public double getPrice() {
-        return price;
+    public int getPublishingYear() {
+        return publishingYear;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setPublishingYear(int publishingYear) {
+        this.publishingYear = publishingYear;
     }
 
     public String getPublishingHouse() {
@@ -57,19 +57,14 @@ public class Book {
         this.authors = authors;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equalsToBook(Book book) {
+        if (this == book) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (book == null) {
             return false;
         }
-        Book book = (Book) o;
-        if (bookId != book.bookId) {
-            return false;
-        }
-        if (price != book.price) {
+        if (publishingYear != book.publishingYear) {
             return false;
         }
         if (name == null) {
@@ -103,8 +98,23 @@ public class Book {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Book book = (Book) o;
+        if (bookId != book.bookId) {
+            return false;
+        }
+        return equalsToBook(book);
+    }
+
+    @Override
     public int hashCode() {
-        return (int) (31 * bookId + price + ((name != null) ? name.hashCode() : 0)
+        return (int) (31 * bookId + publishingYear + ((name != null) ? name.hashCode() : 0)
                 + ((publishingHouse != null) ? publishingHouse.hashCode() : 0)
                 + ((authors != null) ? authors.hashCode() : 0));
     }
@@ -114,7 +124,7 @@ public class Book {
         final StringBuilder sb = new StringBuilder("Book {");
         sb.append("bookId = ").append(bookId);
         sb.append(", name = '").append(name).append('\'');
-        sb.append(", price = ").append(price);
+        sb.append(", publishingYear = ").append(publishingYear);
         sb.append(", publishingHouse = '").append(publishingHouse).append('\'');
         sb.append(", authors = ").append(authors);
         sb.append('}');

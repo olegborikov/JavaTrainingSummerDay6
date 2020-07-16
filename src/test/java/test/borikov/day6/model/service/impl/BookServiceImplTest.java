@@ -1,3 +1,4 @@
+/*
 package test.borikov.day6.model.service.impl;
 
 import com.borikov.day6.exception.ServiceException;
@@ -756,3 +757,4 @@ public class BookServiceImplTest {
     }
 }
 
+*/

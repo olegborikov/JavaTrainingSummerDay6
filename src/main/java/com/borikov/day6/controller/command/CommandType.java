@@ -8,12 +8,12 @@ public enum CommandType {
     FIND_ALL_BOOKS(new FindAllBooksCommand()),
     FIND_BOOK_BY_ID(new FindBookByIdCommand()),
     FIND_BOOKS_BY_NAME(new FindBooksByNameCommand()),
-    FIND_BOOKS_BY_PRICE(new FindBooksByPriceCommand()),
+    FIND_BOOKS_BY_PUBLISHING_YEAR(new FindBooksByPublishingYearCommand()),
     FIND_BOOKS_BY_PUBLISHING_HOUSE(new FindBooksByPublishingHouseCommand()),
     FIND_BOOKS_BY_AUTHOR(new FindBooksByAuthorCommand()),
     SORT_BOOKS_BY_ID(new SortBooksByIdCommand()),
     SORT_BOOKS_BY_NAME(new SortBooksByNameCommand()),
-    SORT_BOOKS_BY_PRICE(new SortBooksByPriceCommand()),
+    SORT_BOOKS_BY_PUBLISHING_YEAR(new SortBooksByPublishingYearCommand()),
     SORT_BOOKS_BY_PUBLISHING_HOUSE(new SortBooksByPublishingHouseCommand()),
     SORT_BOOKS_BY_AUTHORS(new SortBooksByAuthorsCommand());
     Command command;

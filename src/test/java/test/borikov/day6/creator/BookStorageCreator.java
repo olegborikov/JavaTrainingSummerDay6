@@ -1,5 +1,6 @@
 package test.borikov.day6.creator;
 
+import com.borikov.day6.exception.StorageException;
 import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.model.entity.BookStorage;
 
@@ -13,12 +14,15 @@ public class BookStorageCreator {
     private BookStorageCreator() {
     }
 
-    public static void setUpBookStorage() {
+    public static void setUpBookStorage() throws StorageException {
         BookStorage bookStorage = BookStorage.getInstance();
         if (books == null) {
             createBooks();
         }
-        bookStorage.set(new ArrayList<>(books));
+        bookStorage.reset();
+        for (Book book : books) {
+            bookStorage.add(book);
+        }
     }
 
     public static List<Book> getCreatedBooks() {

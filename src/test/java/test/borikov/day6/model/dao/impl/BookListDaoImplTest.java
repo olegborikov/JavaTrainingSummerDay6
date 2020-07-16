@@ -1,3 +1,4 @@
+/*
 package test.borikov.day6.model.dao.impl;
 
 import com.borikov.day6.model.dao.BookListDao;
@@ -700,3 +701,4 @@ public class BookListDaoImplTest {
     }
 }
 
+*/

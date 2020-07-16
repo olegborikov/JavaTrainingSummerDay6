@@ -11,25 +11,25 @@ public interface BookListDao {
 
     void remove(Book book) throws DaoException;
 
-    List<Book> findAll() throws DaoException;
+    List<Book> findAll();
 
-    Optional<Book> findById(long id) throws DaoException;
+    Optional<Book> findById(long id);
 
-    List<Book> findByName(String name) throws DaoException;
+    List<Book> findByName(String name);
 
-    List<Book> findByPrice(Double price) throws DaoException;
+    List<Book> findByPublishingYear(int publishingYear);
 
-    List<Book> findByPublishingHouse(String publishingHouse) throws DaoException;
+    List<Book> findByPublishingHouse(String publishingHouse);
 
-    List<Book> findByAuthor(String author) throws DaoException;
+    List<Book> findByAuthor(String author);
 
-    List<Book> sortById() throws DaoException;
+    List<Book> sortById();
 
-    List<Book> sortByName() throws DaoException;
+    List<Book> sortByName();
 
-    List<Book> sortByPrice() throws DaoException;
+    List<Book> sortByPublishingYear();
 
-    List<Book> sortByPublishingHouse() throws DaoException;
+    List<Book> sortByPublishingHouse();
 
-    List<Book> sortByAuthors() throws DaoException;
+    List<Book> sortByAuthors();
 }

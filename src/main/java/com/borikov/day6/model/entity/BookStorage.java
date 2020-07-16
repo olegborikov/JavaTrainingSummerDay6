@@ -22,37 +22,39 @@ public class BookStorage {
         return instance;
     }
 
-    public void set(List<Book> books) {
-        this.books = books;
-    }
-
-    public List<Book> get() throws StorageException {
-        if (books == null) {
-            throw new StorageException("There is no book storage");
-        }
+    public List<Book> get() {
         return Collections.unmodifiableList(books);
     }
 
     public void add(Book book) throws StorageException {
-        if (books == null) {
-            throw new StorageException("There is no book storage");
-        }
-        if (books.size() >= MAX_CAPACITY) {
+        if (books.size() + 1 > MAX_CAPACITY) {
             throw new StorageException("Book storage is overflowed");
         }
-        if (books.contains(book)) {
+        if (isBooksContains(book)) {
             throw new StorageException("Book already in storage");
         }
         books.add(book);
     }
 
     public void remove(Book book) throws StorageException {
-        if (books == null) {
-            throw new StorageException("There is no book storage");
-        }
-        if (!books.contains(book)) {
+        if (!isBooksContains(book)) {
             throw new StorageException("No such book in storage");
         }
         books.remove(book);
+    }
+
+    public void reset() {
+        books = new ArrayList<>();
+    }
+
+    private boolean isBooksContains(Book book) {
+        boolean result = false;
+        for (Book currentBook : books) {
+            if (currentBook.equalsToBook(book)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 }
