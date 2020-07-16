@@ -16,15 +16,10 @@ public class RemoveBookCommand implements Command {
     public Map<String, List<Book>> execute(Map<String, String> data) {
         BookServiceImpl bookService = new BookServiceImpl();
         List<Book> removedBook = new ArrayList<>();
-        if (data != null) {
+        if (!(data == null || data.get(KeyType.PRICE) == null)) {
             try {
                 String name = data.get(KeyType.NAME);
-                double price;
-                if (data.get(KeyType.PRICE) == null) {
-                    price = -1;
-                } else {
-                    price = Double.parseDouble(data.get(KeyType.PRICE));
-                }
+                double price = Double.parseDouble(data.get(KeyType.PRICE));
                 String publishingHouse = data.get(KeyType.PUBLISHING_HOUSE);
                 int authorNumber = 1;
                 List<String> authors = new ArrayList<>();
@@ -33,9 +28,7 @@ public class RemoveBookCommand implements Command {
                     authorNumber++;
                 }
                 Book book = new Book(name, price, publishingHouse, authors);
-                bookService.removeBook(book);
-                removedBook = new ArrayList<>();
-                removedBook.add(book);
+                removedBook = bookService.removeBook(book);
             } catch (ServiceException | NumberFormatException e) {
                 e.printStackTrace();// TODO: 16.07.2020 log or command exception?
             }
