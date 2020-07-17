@@ -2,7 +2,6 @@ package com.borikov.day6.model.service.impl;
 
 import com.borikov.day6.exception.DaoException;
 import com.borikov.day6.exception.ServiceException;
-import com.borikov.day6.model.dao.BookListDao;
 import com.borikov.day6.model.dao.impl.BookListDaoImpl;
 import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.model.service.BookService;
@@ -22,12 +21,12 @@ public class BookServiceImpl implements BookService {
         BookParser bookParser = new BookParser();
         List<Book> addedBook = new ArrayList<>();
         int publishingYearParsed = bookParser.parsePublishingYear(publishingYear);
-        if (!bookValidator.isNameCorrect(name) ||
-                !bookValidator.isPublishingYearCorrect(publishingYearParsed) ||
+        if (!bookValidator.isPublishingYearCorrect(publishingYearParsed) ||
+                !bookValidator.isNameCorrect(name) ||
                 !bookValidator.isPublishingHouseCorrect(publishingHouse) ||
                 !bookValidator.isAuthorsCorrect(authors)) {
             try {
-                BookListDao bookListDao = new BookListDaoImpl();
+                BookListDaoImpl bookListDao = new BookListDaoImpl();
                 Book book = new Book(name, publishingYearParsed, publishingHouse, authors);
                 bookListDao.add(book);
                 addedBook.add(book);
@@ -46,12 +45,12 @@ public class BookServiceImpl implements BookService {
         BookParser bookParser = new BookParser();
         List<Book> removedBook = new ArrayList<>();
         int publishingYearParsed = bookParser.parsePublishingYear(publishingYear);
-        if (!bookValidator.isNameCorrect(name) ||
-                !bookValidator.isPublishingYearCorrect(publishingYearParsed) ||
+        if (!bookValidator.isPublishingYearCorrect(publishingYearParsed) ||
+                !bookValidator.isNameCorrect(name) ||
                 !bookValidator.isPublishingHouseCorrect(publishingHouse) ||
                 !bookValidator.isAuthorsCorrect(authors)) {
             try {
-                BookListDao bookListDao = new BookListDaoImpl();
+                BookListDaoImpl bookListDao = new BookListDaoImpl();
                 Book book = new Book(name, publishingYearParsed, publishingHouse, authors);
                 bookListDao.remove(book);
                 removedBook.add(book);
@@ -64,7 +63,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findAllBooks() {
-        BookListDao bookListDao = new BookListDaoImpl();
+        BookListDaoImpl bookListDao = new BookListDaoImpl();
         List<Book> books = bookListDao.findAll();
         return books;
     }
@@ -73,14 +72,14 @@ public class BookServiceImpl implements BookService {
     public List<Book> findBookById(String id) {
         BookValidator bookValidator = new BookValidator();
         BookParser bookParser = new BookParser();
-        List<Book> filteredBook = new ArrayList<>();
+        List<Book> currentBook = new ArrayList<>();
         long idParsed = bookParser.parseId(id);
         if (bookValidator.isIdCorrect(idParsed)) {
-            BookListDao bookListDao = new BookListDaoImpl();
-            Optional<Book> currentBook = bookListDao.findById(idParsed);
-            currentBook.ifPresent(b -> filteredBook.add(b));
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
+            Optional<Book> book = bookListDao.findById(idParsed);
+            book.ifPresent(b -> currentBook.add(b));
         }
-        return filteredBook;
+        return currentBook;
     }
 
     @Override
@@ -88,7 +87,7 @@ public class BookServiceImpl implements BookService {
         BookValidator bookValidator = new BookValidator();
         List<Book> filteredBooks = new ArrayList<>();
         if (bookValidator.isNameCorrect(name)) {
-            BookListDao bookListDao = new BookListDaoImpl();
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
             filteredBooks = bookListDao.findByName(name);
         }
         return filteredBooks;
@@ -101,7 +100,7 @@ public class BookServiceImpl implements BookService {
         List<Book> filteredBooks = new ArrayList<>();
         int publishingYearParsed = bookParser.parsePublishingYear(publishingYear);
         if (bookValidator.isPublishingYearCorrect(publishingYearParsed)) {
-            BookListDao bookListDao = new BookListDaoImpl();
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
             filteredBooks = bookListDao.findByPublishingYear(publishingYearParsed);
         }
         return filteredBooks;
@@ -112,7 +111,7 @@ public class BookServiceImpl implements BookService {
         BookValidator bookValidator = new BookValidator();
         List<Book> filteredBooks = new ArrayList<>();
         if (bookValidator.isPublishingHouseCorrect(publishingHouse)) {
-            BookListDao bookListDao = new BookListDaoImpl();
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
             filteredBooks = bookListDao.findByPublishingHouse(publishingHouse);
 
         }
@@ -124,7 +123,7 @@ public class BookServiceImpl implements BookService {
         BookValidator bookValidator = new BookValidator();
         List<Book> filteredBooks = new ArrayList<>();
         if (bookValidator.isAuthorCorrect(author)) {
-            BookListDao bookListDao = new BookListDaoImpl();
+            BookListDaoImpl bookListDao = new BookListDaoImpl();
             filteredBooks = bookListDao.findByAuthor(author);
         }
         return filteredBooks;
@@ -132,35 +131,35 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> sortBooksById() {
-        BookListDao bookListDao = new BookListDaoImpl();
+        BookListDaoImpl bookListDao = new BookListDaoImpl();
         List<Book> sortedBooks = bookListDao.sortById();
         return sortedBooks;
     }
 
     @Override
     public List<Book> sortBooksByName() {
-        BookListDao bookListDao = new BookListDaoImpl();
+        BookListDaoImpl bookListDao = new BookListDaoImpl();
         List<Book> sortedBooks = bookListDao.sortByName();
         return sortedBooks;
     }
 
     @Override
     public List<Book> sortBooksByPublishingYear() {
-        BookListDao bookListDao = new BookListDaoImpl();
+        BookListDaoImpl bookListDao = new BookListDaoImpl();
         List<Book> sortedBooks = bookListDao.sortByPublishingYear();
         return sortedBooks;
     }
 
     @Override
     public List<Book> sortBooksByPublishingHouse() {
-        BookListDao bookListDao = new BookListDaoImpl();
+        BookListDaoImpl bookListDao = new BookListDaoImpl();
         List<Book> sortedBooks = bookListDao.sortByPublishingHouse();
         return sortedBooks;
     }
 
     @Override
     public List<Book> sortBooksByAuthors() {
-        BookListDao bookListDao = new BookListDaoImpl();
+        BookListDaoImpl bookListDao = new BookListDaoImpl();
         List<Book> sortedBooks = bookListDao.sortByAuthors();
         return sortedBooks;
     }

@@ -1,9 +1,8 @@
 package com.borikov.day6.controller.command.impl;
 
 import com.borikov.day6.controller.command.Command;
-import com.borikov.day6.controller.command.impl.constant.KeyTypeResponse;
+import com.borikov.day6.controller.command.impl.constant.ResponseKeyType;
 import com.borikov.day6.model.entity.Book;
-import com.borikov.day6.model.service.BookService;
 import com.borikov.day6.model.service.impl.BookServiceImpl;
 
 import java.util.HashMap;
@@ -14,10 +13,10 @@ public class SortBooksByAuthorsCommand implements Command {
 
     @Override
     public Map<String, List<Book>> execute(Map<String, String> data) {
-        BookService bookService = new BookServiceImpl();
+        BookServiceImpl bookService = new BookServiceImpl();
         List<Book> sortedBooks = bookService.sortBooksByAuthors();
         Map<String, List<Book>> response = new HashMap<>();
-        response.put(KeyTypeResponse.SORTED_BOOKS, sortedBooks);
+        response.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
         return response;
     }
 }

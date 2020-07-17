@@ -6,12 +6,13 @@ import com.borikov.day6.model.entity.Book;
 import java.util.List;
 
 public interface BookService {
-    List<Book> addBook(String name, String publishingYear, String publishingHouse,
-                       List<String> authors) throws ServiceException;
+    List<Book> addBook(String name, String publishingYear,
+                       String publishingHouse, List<String> authors)
+            throws ServiceException;
 
     List<Book> removeBook(String name, String publishingYear,
-                          String publishingHouse,
-                          List<String> authors) throws ServiceException;
+                          String publishingHouse, List<String> authors)
+            throws ServiceException;
 
     List<Book> findAllBooks();
 

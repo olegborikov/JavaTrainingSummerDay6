@@ -1,17 +1,17 @@
 package com.borikov.day6.controller.command;
 
 public class CommandProvider {
-    private static final CommandType DEFAULT_COMMAND = CommandType.FIND_ALL_BOOKS;
+    private static final CommandType DEFAULT_TYPE = CommandType.FIND_ALL_BOOKS;
 
     public Command defineCommand(String request) {
         CommandType currentType;
         if (request == null) {
-            currentType = DEFAULT_COMMAND;
+            currentType = DEFAULT_TYPE;
         } else {
             try {
                 currentType = CommandType.valueOf(request.toUpperCase());
             } catch (IllegalArgumentException e) {
-                currentType = DEFAULT_COMMAND;
+                currentType = DEFAULT_TYPE;
             }
         }
         Command currentCommand = currentType.getCommand();

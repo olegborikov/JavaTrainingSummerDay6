@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class BookListDaoImpl implements BookListDao {
     @Override
     public void add(Book book) throws DaoException {
-        BookStorage storage = BookStorage.getInstance();
         try {
+            BookStorage storage = BookStorage.getInstance();
             storage.add(book);
         } catch (StorageException e) {
             throw new DaoException(e);
@@ -24,8 +24,8 @@ public class BookListDaoImpl implements BookListDao {
 
     @Override
     public void remove(Book book) throws DaoException {
-        BookStorage storage = BookStorage.getInstance();
         try {
+            BookStorage storage = BookStorage.getInstance();
             storage.remove(book);
         } catch (StorageException e) {
             throw new DaoException(e);
@@ -115,7 +115,7 @@ public class BookListDaoImpl implements BookListDao {
         BookStorage storage = BookStorage.getInstance();
         List<Book> books = storage.get();
         List<Book> sortedBooks = books.stream()
-                .sorted(Comparator.comparingDouble(b -> b.getPublishingYear()))
+                .sorted(Comparator.comparingInt(b -> b.getPublishingYear()))
                 .collect(Collectors.toList());
         return sortedBooks;
     }
