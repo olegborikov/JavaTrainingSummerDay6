@@ -1,4 +1,3 @@
-/*
 package test.borikov.day6.validator;
 
 import com.borikov.day6.validator.BookValidator;
@@ -13,7 +12,7 @@ import java.util.List;
 import static org.testng.Assert.*;
 
 public class BookValidatorTest {
-    BookValidator bookValidator;
+    private BookValidator bookValidator;
 
     @BeforeClass
     public void setUp() {
@@ -88,33 +87,33 @@ public class BookValidatorTest {
         assertFalse(actual);
     }
 
-    @DataProvider(name = "isPriceCorrectPositiveData")
-    public Object[][] createIsPriceCorrectPositiveData() {
+    @DataProvider(name = "isPublishingYearCorrectPositiveData")
+    public Object[][] createIsPublishingYearCorrectPositiveData() {
         return new Object[][]{
-                {0.01},
-                {1000.0},
-                {10.18}
+                {1},
+                {1999},
+                {2020}
         };
     }
 
-    @Test(dataProvider = "isPriceCorrectPositiveData")
-    public void isPriceCorrectPositiveTest(Double price) {
-        boolean actual = bookValidator.isPriceCorrect(price);
+    @Test(dataProvider = "isPublishingYearCorrectPositiveData")
+    public void isPublishingYearCorrectPositiveTest(int publishingYear) {
+        boolean actual = bookValidator.isPublishingYearCorrect(publishingYear);
         assertTrue(actual);
     }
 
-    @DataProvider(name = "isPriceCorrectNegativeData")
-    public Object[][] createIsPriceCorrectNegativeData() {
+    @DataProvider(name = "isPublishingYearCorrectNegativeData")
+    public Object[][] createIsPublishingYearCorrectNegativeData() {
         return new Object[][]{
-                {0.009},
-                {1000.01},
-                {-10.18}
+                {0},
+                {-123},
+                {2021}
         };
     }
 
-    @Test(dataProvider = "isPriceCorrectNegativeData")
-    public void isPriceCorrectNegativeTest(Double price) {
-        boolean actual = bookValidator.isPriceCorrect(price);
+    @Test(dataProvider = "isPublishingYearCorrectNegativeData")
+    public void isPublishingYearCorrectNegativeTest(int publishingYear) {
+        boolean actual = bookValidator.isPublishingYearCorrect(publishingYear);
         assertFalse(actual);
     }
 
@@ -255,4 +254,3 @@ public class BookValidatorTest {
         assertFalse(actual);
     }
 }
-*/

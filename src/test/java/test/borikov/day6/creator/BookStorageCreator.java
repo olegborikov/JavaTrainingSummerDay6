@@ -9,27 +9,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class BookStorageCreator {
+    private static BookStorageCreator instance;
     private static List<Book> books;
 
     private BookStorageCreator() {
-    }
-
-    public static void setUpBookStorage() throws StorageException {
-        BookStorage bookStorage = BookStorage.getInstance();
-        if (books == null) {
-            createBooks();
-        }
-        bookStorage.reset();
-        for (Book book : books) {
-            bookStorage.add(book);
-        }
-    }
-
-    public static List<Book> getCreatedBooks() {
-        return Collections.unmodifiableList(books);
-    }
-
-    private static List<Book> createBooks() {
         books = new ArrayList<>();
         List<String> authors1 = new ArrayList<>();
         authors1.add("Лев Толстой");
@@ -76,6 +59,25 @@ public class BookStorageCreator {
         books.add(book8);
         books.add(book9);
         books.add(book10);
-        return books;
     }
+
+    public static BookStorageCreator getInstance() {
+        if (instance == null) {
+            instance = new BookStorageCreator();
+        }
+        return instance;
+    }
+
+    public void setUpBookStorage() throws StorageException {
+        BookStorage bookStorage = BookStorage.getInstance();
+        bookStorage.reset();
+        for (Book book : books) {
+            bookStorage.add(book);
+        }
+    }
+
+    public List<Book> getCreatedBooks() {
+        return Collections.unmodifiableList(books);
+    }
+
 }

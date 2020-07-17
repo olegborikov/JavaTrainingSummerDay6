@@ -4,8 +4,9 @@ import java.util.Calendar;
 import java.util.List;
 
 public class BookValidator {
-    private static final int MIN_PUBLISHING_YEAR = 0;
-    private static final int MAX_PUBLISHING_YEAR = Calendar.getInstance().get(Calendar.YEAR);
+    private static final int MIN_PUBLISHING_YEAR = 1;
+    private static final int MAX_PUBLISHING_YEAR =
+            Calendar.getInstance().get(Calendar.YEAR);
     private static final long MIN_ID = 1;
     private static final long MAX_ID = 100_000;
     private static final int MAX_STRING_LENGTH = 40;
