@@ -40,7 +40,7 @@ public class BookStorage {
         if (!isBooksContains(book)) {
             throw new StorageException("No such book in storage");
         }
-        books.remove(book);
+        books.removeIf(currentBook -> currentBook.equalsToBook(book));
     }
 
     public void reset() {

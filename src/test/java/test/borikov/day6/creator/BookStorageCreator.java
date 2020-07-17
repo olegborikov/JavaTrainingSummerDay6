@@ -79,5 +79,4 @@ public class BookStorageCreator {
     public List<Book> getCreatedBooks() {
         return Collections.unmodifiableList(books);
     }
-
 }
