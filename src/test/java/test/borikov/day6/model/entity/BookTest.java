@@ -31,11 +31,11 @@ public class BookTest {
         Book secondBook1 = bookStorageCreator.getCreatedBooks().get(1);
         Book firstBook2 = bookStorageCreator.getCreatedBooks().get(5);
         Book firstBook3 = bookStorageCreator.getCreatedBooks().get(4);
-        Book secondBook3 = new Book("Война и мир", 100,
+        Book secondBook3 = new Book("Война и мир", 1990,
                 "Москва", new ArrayList<>(Arrays.asList("Лев Толстой")));
-        Book firstBook4 = new Book("Qwerty", 1,
+        Book firstBook4 = new Book("Qwerty", 2000,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty")));
-        Book secondBook4 = new Book("Qwerty", 1,
+        Book secondBook4 = new Book("Qwerty", 2000,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty")));
         return new Object[][]{
                 {firstBook1, secondBook1},
@@ -57,23 +57,23 @@ public class BookTest {
         Book firstBook2 = bookStorageCreator.getCreatedBooks().get(5);
         Book secondBook2 = bookStorageCreator.getCreatedBooks().get(6);
         Book firstBook3 = bookStorageCreator.getCreatedBooks().get(4);
-        Book secondBook3 = new Book("Война и мир", 101,
+        Book secondBook3 = new Book("Война и мир", 2000,
                 "Москва", new ArrayList<>(Arrays.asList("Лев Толстой")));
-        Book firstBook4 = new Book("Qwerty1", 1,
+        Book firstBook4 = new Book("Qwerty1", 1999,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty")));
-        Book secondBook4 = new Book("Qwerty", 1,
+        Book secondBook4 = new Book("Qwerty", 1999,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty")));
-        Book firstBook5 = new Book("Qwerty", 1,
+        Book firstBook5 = new Book("Qwerty", 1999,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty1")));
-        Book secondBook5 = new Book("Qwerty", 1,
+        Book secondBook5 = new Book("Qwerty", 1999,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty")));
-        Book firstBook6 = new Book("Qwerty", 1,
+        Book firstBook6 = new Book("Qwerty", 1999,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty")));
-        Book secondBook6 = new Book("Qwerty", 1,
+        Book secondBook6 = new Book("Qwerty", 1999,
                 "Qwerty1", new ArrayList<>(Arrays.asList("Qwerty")));
-        Book firstBook7 = new Book("Qwerty", 1,
+        Book firstBook7 = new Book("Qwerty", 1999,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty")));
-        Book secondBook7 = new Book("Qwerty", 1,
+        Book secondBook7 = new Book("Qwerty", 1999,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty", "Qwerty")));
         return new Object[][]{
                 {firstBook1, null},
@@ -115,11 +115,11 @@ public class BookTest {
         Book firstBook2 = bookStorageCreator.getCreatedBooks().get(5);
         Book secondBook2 = bookStorageCreator.getCreatedBooks().get(6);
         Book firstBook3 = bookStorageCreator.getCreatedBooks().get(4);
-        Book secondBook3 = new Book("Война и мир", 100,
+        Book secondBook3 = new Book("Война и мир", 1990,
                 "Москва", new ArrayList<>(Arrays.asList("Лев Толстой")));
-        Book firstBook4 = new Book("Qwerty", 1,
+        Book firstBook4 = new Book("Qwerty", 1999,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty")));
-        Book secondBook4 = new Book("Qwerty", 1,
+        Book secondBook4 = new Book("Qwerty", 1999,
                 "Qwerty", new ArrayList<>(Arrays.asList("Qwerty")));
         return new Object[][]{
                 {firstBook1, null},

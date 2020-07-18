@@ -37,13 +37,13 @@ public class BookStorageTest {
     @DataProvider(name = "addPositiveData")
     public Object[][] createAddPositiveData() {
         Book newBook1 =
-                new Book("Война и мир", 100, "Минск", Arrays.asList("Лев"));
+                new Book("Война и мир", 2020, "Минск", Arrays.asList("Лев"));
         List<Book> expected1 = new ArrayList<>(bookStorageCreator.getCreatedBooks());
         expected1.add(newBook1);
-        Book newBook2 = new Book("Qw", 10, "Москва", Arrays.asList("Qwe"));
+        Book newBook2 = new Book("Qw", 1999, "Москва", Arrays.asList("Qwe"));
         List<Book> expected2 = new ArrayList<>(bookStorageCreator.getCreatedBooks());
         expected2.add(newBook2);
-        Book newBook3 = new Book("мир", 23, "Минск", Arrays.asList("Oleg"));
+        Book newBook3 = new Book("мир", 2000, "Минск", Arrays.asList("Oleg"));
         List<Book> expected3 = new ArrayList<>(bookStorageCreator.getCreatedBooks());
         expected3.add(newBook3);
         return new Object[][]{
@@ -67,12 +67,12 @@ public class BookStorageTest {
     @DataProvider(name = "addNegativeData")
     public Object[][] createAddNegativeData() {
         Book newBook1 =
-                new Book("Война и мир", 100, "Минск", Arrays.asList("Лев"));
+                new Book("Война и мир", 1000, "Минск", Arrays.asList("Лев"));
         List<Book> expected1 = new ArrayList<>(bookStorageCreator.getCreatedBooks());
         expected1.add(null);
-        Book newBook2 = new Book("Qw", 10, "Москва", new ArrayList<>());
+        Book newBook2 = new Book("Qw", 1999, "Москва", new ArrayList<>());
         List<Book> expected2 = bookStorageCreator.getCreatedBooks();
-        Book newBook3 = new Book("Nice?", 23, "Minsk", new ArrayList<>());
+        Book newBook3 = new Book("Nice?", 2000, "Minsk", new ArrayList<>());
         List<Book> expected3 = new ArrayList<>();
         return new Object[][]{
                 {newBook1, expected1},
@@ -98,9 +98,9 @@ public class BookStorageTest {
         Book newBook2 = bookStorageCreator.getCreatedBooks().get(7);
         Book newBook3 = bookStorageCreator.getCreatedBooks().get(0);
         Book newBook4 =
-                new Book("Война и мир", 100, "Минск", Arrays.asList("Лев Толстой"));
+                new Book("Война и мир", 1984, "Минск", Arrays.asList("Лев Толстой"));
         Book newBook5 =
-                new Book("История Минска", 10, "Минск", new ArrayList<>());
+                new Book("История Минска", 1000, "Минск", new ArrayList<>());
         return new Object[][]{
                 {newBook1},
                 {newBook2},
@@ -131,7 +131,7 @@ public class BookStorageTest {
     @DataProvider(name = "removePositiveData")
     public Object[][] createRemovePositiveData() {
         Book removeBook1 =
-                new Book("Война и мир", 100, "Москва", Arrays.asList("Лев Толстой"));
+                new Book("Война и мир", 1990, "Москва", Arrays.asList("Лев Толстой"));
         List<Book> expected1 =
                 new ArrayList<>(bookStorageCreator.getCreatedBooks());
         expected1.remove(bookStorageCreator.getCreatedBooks().get(4));
@@ -144,7 +144,7 @@ public class BookStorageTest {
                 new ArrayList<>(bookStorageCreator.getCreatedBooks());
         expected3.remove(removeBook3);
         Book removeBook4 =
-                new Book("История Минска", 10, "Минск", new ArrayList<>());
+                new Book("История Минска", 1000, "Минск", new ArrayList<>());
         List<Book> expected4 = new ArrayList<>(bookStorageCreator.getCreatedBooks());
         expected4.remove(bookStorageCreator.getCreatedBooks().get(6));
         return new Object[][]{
@@ -198,15 +198,15 @@ public class BookStorageTest {
     @DataProvider(name = "removeExceptionData")
     public Object[][] createRemoveExceptionData() {
         Book newBook1 =
-                new Book("Война и мир", 100, "Минск", Arrays.asList("Лев"));
+                new Book("Война и мир", 100, "Минск", Arrays.asList("Лев Толстой"));
         Book newBook2 =
                 new Book("Qw", 10, "Москва", Arrays.asList("Qwe"));
         Book newBook3 =
-                new Book("мир", 23, "Минск", Arrays.asList("Oleg"));
+                new Book("Война и мир", 1984, "Минск", Arrays.asList("Лев"));
         Book newBook4 =
-                new Book("Война и мир", 100, "Минск1", Arrays.asList("Лев Толстой"));
+                new Book("Война и мир", 1984, "Минск1", Arrays.asList("Лев Толстой"));
         Book newBook5 =
-                new Book("История Минска", 101, "Минск", new ArrayList<>());
+                new Book("История Минска", 1001, "Минск", new ArrayList<>());
         return new Object[][]{
                 {newBook1},
                 {newBook2},
