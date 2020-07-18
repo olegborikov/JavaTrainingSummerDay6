@@ -1,7 +1,7 @@
-/*
 package test.borikov.day6.model.service.impl;
 
 import com.borikov.day6.exception.ServiceException;
+import com.borikov.day6.exception.StorageException;
 import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.model.service.BookService;
 import com.borikov.day6.model.service.impl.BookServiceImpl;
@@ -9,78 +9,92 @@ import org.testng.annotations.*;
 import test.borikov.day6.creator.BookStorageCreator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.*;
 
 public class BookServiceImplTest {
     private BookService bookService;
+    private BookStorageCreator bookStorageCreator;
 
     @BeforeClass
-    public void setUpClass() {
+    public void setUpClass() throws StorageException {
         bookService = new BookServiceImpl();
-        BookStorageCreator.setUpBookStorage();
+        bookStorageCreator = BookStorageCreator.getInstance();
+        bookStorageCreator.setUpBookStorage();
     }
 
     @AfterClass
     public void tearDownClass() {
         bookService = null;
+        bookStorageCreator = null;
     }
 
     @AfterMethod
-    public void tearDownMethod() {
-        BookStorageCreator.setUpBookStorage();
+    public void tearDownMethod() throws StorageException {
+        bookStorageCreator.setUpBookStorage();
     }
 
     @DataProvider(name = "addBookPositiveData")
     public Object[][] createAddBookPositiveData() {
-        List<String> authors1 = new ArrayList<>();
-        authors1.add("Лев");
-        Book newBook1 = new Book("Война", 120, "Минск", authors1);
+        String name1 = "Война и мир";
+        String publishingYear1 = "2020";
+        String publishingHouse1 = "Минск";
+        List<String> authors1 = Arrays.asList("Лев");
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(newBook1);
-        List<String> authors2 = new ArrayList<>();
-        authors2.add("Олег");
-        Book newBook2 = new Book("Я", 13, "Москва", authors2);
+        expected1.add(new Book("Война и мир", 2020, "Минск", Arrays.asList("Лев")));
+        String name2 = "This is very very long line with 43 symbols";
+        String publishingYear2 = "2020";
+        String publishingHouse2 = "Минск";
+        List<String> authors2 = Arrays.asList("Лев");
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(newBook2);
-        List<String> authors3 = new ArrayList<>();
-        authors3.add("Саша");
-        authors3.add("Олег");
-        Book newBook3 = new Book("Мир", 20, "Минск", authors3);
+        String name3 = "мир";
+        String publishingYear3 = "2020";
+        String publishingHouse3 = "This is very very long line with 43 symbols";
+        List<String> authors3 = Arrays.asList("Лев");
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(newBook3);
-        Book newBook4 = new Book("Qwerty", 1001, "qwerty", new ArrayList<>());
-        List<String> expected4 = new ArrayList<>();
-        Book newBook5 = new Book("this is very very long line with 43 symbols",
-                100, "qwerty", new ArrayList<>());
-        List<String> expected5 = new ArrayList<>();
-        Book newBook6 = new Book("Qwerty", 100,
-                "this is very very long line with 43 symbols", new ArrayList<>());
-        List<String> expected6 = new ArrayList<>();
-        List<String> authors7 = new ArrayList<>();
-        authors7.add(null);
-        Book newBook7 = new Book("Qwerty", 100,
-                "this is very very long line with 43 symbols", authors7);
-        List<String> expected7 = new ArrayList<>();
-        List<String> expected8 = new ArrayList<>();
+        String name4 = "мир";
+        String publishingYear4 = "ac";
+        String publishingHouse4 = "Минск";
+        List<String> authors4 = Arrays.asList("Лев");
+        List<Book> expected4 = new ArrayList<>();
+        String name5 = "мир";
+        String publishingYear5 = "2020";
+        String publishingHouse5 = "Минск";
+        List<String> authors5 =
+                Arrays.asList("This is very very long line with 43 symbols");
+        List<Book> expected5 = new ArrayList<>();
+        String name6 = "Qw";
+        String publishingYear6 = "1999";
+        String publishingHouse6 = "Москва";
+        List<String> authors6 = Arrays.asList("Qwe");
+        List<Book> expected6 = new ArrayList<>();
+        expected6.add(new Book("Qw", 1999, "Москва", Arrays.asList("Qwe")));
         return new Object[][]{
-                {newBook1, expected1},
-                {newBook2, expected2},
-                {newBook3, expected3},
-                {newBook4, expected4},
-                {newBook5, expected5},
-                {newBook6, expected6},
-                {newBook7, expected7},
-                {null, expected8},
+                {name1, publishingYear1, publishingHouse1, authors1, expected1},
+                {name2, publishingYear2, publishingHouse2, authors2, expected2},
+                {name3, publishingYear3, publishingHouse3, authors3, expected3},
+                {name4, publishingYear4, publishingHouse4, authors4, expected4},
+                {name5, publishingYear5, publishingHouse5, authors5, expected5},
+                {name6, publishingYear6, publishingHouse6, authors6, expected6}
         };
     }
 
     @Test(dataProvider = "addBookPositiveData")
-    public void addBookPositiveTest(Book newBook, List<Book> expected) {
+    public void addBookPositiveTest(String name, String publishingYear,
+                                    String publishingHouse,
+                                    List<String> authors, List<Book> expected) {
         try {
-            List<Book> actual = bookService.addBook(newBook);
-            assertEquals(actual, expected);
+            List<Book> actual = bookService.addBook(name,
+                    publishingYear, publishingHouse, authors);
+            boolean result;
+            if (actual.size() == 1 && expected.size() == 1) {
+                result = actual.get(0).equalsToBook(expected.get(0));
+            } else {
+                result = actual.equals(expected);
+            }
+            assertTrue(result);
         } catch (ServiceException e) {
             fail("Incorrect input");
         }
@@ -88,89 +102,139 @@ public class BookServiceImplTest {
 
     @DataProvider(name = "addBookNegativeData")
     public Object[][] createAddBookNegativeData() {
-        List<String> authors1 = new ArrayList<>();
-        authors1.add("Лев");
-        Book newBook1 = new Book("Война", 120, "Минск", authors1);
-        List<Book> expected1 = new ArrayList<>(BookStorageCreator.getCreatedBooks());
-        List<String> authors2 = new ArrayList<>();
-        authors2.add("Олег");
-        Book newBook2 = new Book("Я", 13, "Москва", authors2);
-        List<Book> expected2 = new ArrayList<>();
-        List<String> authors3 = new ArrayList<>();
-        authors3.add("Саша");
-        authors3.add("Олег");
-        Book newBook3 = new Book("Мир", 20, "Минск", authors3);
+        String name1 = "Война и мир";
+        String publishingYear1 = "2021";
+        String publishingHouse1 = "Минск";
+        List<String> authors1 = Arrays.asList("Лев");
+        List<Book> expected1 = new ArrayList<>();
+        expected1.add(new Book("Война и мир", 2021, "Минск", Arrays.asList("Лев")));
+        String name2 = "This is very very long line with 43 symbols";
+        String publishingYear2 = "2020";
+        String publishingHouse2 = "Минск";
+        List<String> authors2 = Arrays.asList("Лев");
+        List<Book> expected2 = null;
+        String name3 = "Qw";
+        String publishingYear3 = "1999";
+        String publishingHouse3 = "Москва";
+        List<String> authors3 = Arrays.asList();
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(newBook2);
-        expected3.add(newBook3);
-        Book newBook4 = new Book("Qwerty", 100,
-                "this is very very long line with 43 symbols", new ArrayList<>());
-        List<Book> expected4 = new ArrayList<>();
-        expected4.add(newBook4);
-        List<Book> expected5 = new ArrayList<>();
-        expected5.add(newBook4);
+        expected3.add(new Book("Qw", 1999, "Москва", Arrays.asList("Qwe")));
         return new Object[][]{
-                {newBook1, expected1},
-                {newBook2, expected2},
-                {newBook3, expected3},
-                {newBook4, expected4},
-                {null, expected5}
+                {name1, publishingYear1, publishingHouse1, authors1, expected1},
+                {name2, publishingYear2, publishingHouse2, authors2, expected2},
+                {name3, publishingYear3, publishingHouse3, authors3, expected3}
         };
     }
 
     @Test(dataProvider = "addBookNegativeData")
-    public void addBookNegativeTest(Book newBook, List<Book> expected) {
+    public void addBookNegativeTest(String name, String publishingYear,
+                                    String publishingHouse,
+                                    List<String> authors, List<Book> expected) {
         try {
-            List<Book> actual = bookService.addBook(newBook);
-            assertNotEquals(actual, expected);
+            List<Book> actual = bookService.addBook(name,
+                    publishingYear, publishingHouse, authors);
+            boolean result;
+            if (actual.size() == 1 && expected.size() == 1) {
+                result = actual.get(0).equalsToBook(expected.get(0));
+            } else {
+                result = actual.equals(expected);
+            }
+            assertFalse(result);
         } catch (ServiceException e) {
             fail("Incorrect input");
         }
     }
 
-    @DataProvider(name = "addBookInLibraryExceptionData")
-    public Object[][] createAddBookInLibraryExceptionData() {
-        Book newBook1 = BookStorageCreator.getCreatedBooks().get(1);
-        Book newBook2 = BookStorageCreator.getCreatedBooks().get(2);
-        Book newBook3 = BookStorageCreator.getCreatedBooks().get(9);
+    @DataProvider(name = "addBookExceptionData")
+    public Object[][] createAddBookExceptionData() {
+        String name1 = "Война и мир";
+        String publishingYear1 = "1984";
+        String publishingHouse1 = "Минск";
+        List<String> authors1 = Arrays.asList("Лев Толстой");
+        String name2 = "Философия Java";
+        String publishingYear2 = "1000";
+        String publishingHouse2 = "Питер";
+        List<String> authors2 = Arrays.asList("Брюс Эккель");
+        String name3 = "История Минска";
+        String publishingYear3 = "1000";
+        String publishingHouse3 = "Минск";
+        List<String> authors3 = new ArrayList<>();
         return new Object[][]{
-                {newBook1},
-                {newBook2},
-                {newBook3}
+                {name1, publishingYear1, publishingHouse1, authors1},
+                {name2, publishingYear2, publishingHouse2, authors2},
+                {name3, publishingYear3, publishingHouse3, authors3}
         };
     }
 
-    @Test(dataProvider = "addBookInLibraryExceptionData",
+    @Test(dataProvider = "addBookExceptionData",
             expectedExceptions = ServiceException.class)
-    public void addBookInLibraryExceptionTest(Book newBook) throws ServiceException {
-        bookService.addBook(newBook);
+    public void addBookExceptionTest(String name, String publishingYear,
+                                     String publishingHouse,
+                                     List<String> authors)
+            throws ServiceException {
+        bookService.addBook(name, publishingYear, publishingHouse, authors);
     }
 
     @DataProvider(name = "removeBookPositiveData")
     public Object[][] createRemoveBookPositiveData() {
-        Book removeBook1 = BookStorageCreator.getCreatedBooks().get(1);
+        String name1 = "Война и мир";
+        String publishingYear1 = "1990";
+        String publishingHouse1 = "Москва";
+        List<String> authors1 = Arrays.asList("Лев Толстой");
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(removeBook1);
-        Book removeBook2 = BookStorageCreator.getCreatedBooks().get(5);
+        expected1.add(bookStorageCreator.getCreatedBooks().get(4));
+        String name2 = "This is very very long line with 43 symbols";
+        String publishingYear2 = "2020";
+        String publishingHouse2 = "Минск";
+        List<String> authors2 = Arrays.asList("Лев");
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(removeBook2);
-        Book removeBook3 = BookStorageCreator.getCreatedBooks().get(7);
+        String name3 = "мир";
+        String publishingYear3 = "2020";
+        String publishingHouse3 = "This is very very long line with 43 symbols";
+        List<String> authors3 = Arrays.asList("Лев");
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(removeBook3);
-        List<String> expected8 = new ArrayList<>();
+        String name4 = "мир";
+        String publishingYear4 = "2021";
+        String publishingHouse4 = "Минск";
+        List<String> authors4 = Arrays.asList("Лев");
+        List<Book> expected4 = new ArrayList<>();
+        String name5 = "мир";
+        String publishingYear5 = "2020";
+        String publishingHouse5 = "Минск";
+        List<String> authors5 =
+                Arrays.asList("This is very very long line with 43 symbols");
+        List<Book> expected5 = new ArrayList<>();
+        String name6 = "Метро 2033";
+        String publishingYear6 = "2015";
+        String publishingHouse6 = "Киев";
+        List<String> authors6 = Arrays.asList("Дмитрий Глуховский");
+        List<Book> expected6 = new ArrayList<>();
+        expected6.add(bookStorageCreator.getCreatedBooks().get(8));
         return new Object[][]{
-                {removeBook1, expected1},
-                {removeBook2, expected2},
-                {removeBook3, expected3},
-                {null, expected8}
+                {name1, publishingYear1, publishingHouse1, authors1, expected1},
+                {name2, publishingYear2, publishingHouse2, authors2, expected2},
+                {name3, publishingYear3, publishingHouse3, authors3, expected3},
+                {name4, publishingYear4, publishingHouse4, authors4, expected4},
+                {name5, publishingYear5, publishingHouse5, authors5, expected5},
+                {name6, publishingYear6, publishingHouse6, authors6, expected6}
         };
     }
 
     @Test(dataProvider = "removeBookPositiveData")
-    public void removeBookPositiveTest(Book removeBook, List<Book> expected) {
+    public void removeBookPositiveTest(String name, String publishingYear,
+                                       String publishingHouse,
+                                       List<String> authors,
+                                       List<Book> expected) {
         try {
-            List<Book> actual = bookService.removeBook(removeBook);
-            assertEquals(actual, expected);
+            List<Book> actual = bookService.removeBook(name,
+                    publishingYear, publishingHouse, authors);
+            boolean result;
+            if (actual.size() == 1 && expected.size() == 1) {
+                result = actual.get(0).equalsToBook(expected.get(0));
+            } else {
+                result = actual.equals(expected);
+            }
+            assertTrue(result);
         } catch (ServiceException e) {
             fail("Incorrect input");
         }
@@ -178,151 +242,191 @@ public class BookServiceImplTest {
 
     @DataProvider(name = "removeBookNegativeData")
     public Object[][] createRemoveBookNegativeData() {
-        Book removeBook1 = BookStorageCreator.getCreatedBooks().get(1);
+        String name1 = "Война и мир";
+        String publishingYear1 = "1990";
+        String publishingHouse1 = "Москва";
+        List<String> authors1 = Arrays.asList("Лев Толстой");
         List<Book> expected1 = new ArrayList<>();
-        Book removeBook2 = BookStorageCreator.getCreatedBooks().get(5);
-        List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(4));
-        Book removeBook3 = BookStorageCreator.getCreatedBooks().get(7);
+        expected1.add(null);
+        String name2 = "This is very very long line with 43 symbols";
+        String publishingYear2 = "2020";
+        String publishingHouse2 = "Минск";
+        List<String> authors2 = Arrays.asList("Лев");
+        List<Book> expected2 = null;
+        String name3 = "Метро 2033";
+        String publishingYear3 = "2015";
+        String publishingHouse3 = "Киев";
+        List<String> authors3 = Arrays.asList("Дмитрий Глуховский");
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(removeBook2);
+        expected3.add(bookStorageCreator.getCreatedBooks().get(1));
         return new Object[][]{
-                {removeBook1, expected1},
-                {removeBook2, expected2},
-                {removeBook3, expected3}
+                {name1, publishingYear1, publishingHouse1, authors1, expected1},
+                {name2, publishingYear2, publishingHouse2, authors2, expected2},
+                {name3, publishingYear3, publishingHouse3, authors3, expected3}
         };
     }
 
     @Test(dataProvider = "removeBookNegativeData")
-    public void removeBookNegativeTest(Book removeBook, List<Book> expected) {
+    public void removeBookNegativeTest(String name, String publishingYear,
+                                       String publishingHouse,
+                                       List<String> authors,
+                                       List<Book> expected) {
         try {
-            List<Book> actual = bookService.removeBook(removeBook);
-            assertNotEquals(actual, expected);
+            List<Book> actual = bookService.removeBook(name, publishingYear,
+                    publishingHouse, authors);
+            boolean result;
+            if (actual.size() == 1 && expected.size() == 1) {
+                result = actual.get(0).equalsToBook(expected.get(0));
+            } else {
+                result = actual.equals(expected);
+            }
+            assertFalse(result);
         } catch (ServiceException e) {
             fail("Incorrect input");
         }
     }
 
-    @DataProvider(name = "removeBookFromLibraryExceptionData")
+    @DataProvider(name = "removeBookExceptionData")
     public Object[][] createRemoveBookExceptionData() {
-        List<String> authors1 = new ArrayList<>();
-        authors1.add("Лев");
-        Book removeBook1 = new Book("Война", 120, "Минск", authors1);
-        List<String> authors2 = new ArrayList<>();
-        authors2.add("Олег");
-        Book removeBook2 = new Book("Я", 13, "Москва", authors2);
-        List<String> authors3 = new ArrayList<>();
-        authors3.add("Саша");
-        authors3.add("Олег");
-        Book removeBook3 = new Book("Мир", 20, "Минск", authors3);
+        String name1 = "Война и мир";
+        String publishingYear1 = "1990";
+        String publishingHouse1 = "Москва";
+        List<String> authors1 = Arrays.asList("Толстой");
+        String name2 = "Qwe";
+        String publishingYear2 = "2020";
+        String publishingHouse2 = "Минск";
+        List<String> authors2 = Arrays.asList("Лев");
+        String name3 = "мир";
+        String publishingYear3 = "2020";
+        String publishingHouse3 = "Minsk";
+        List<String> authors3 = Arrays.asList("Лев");
+        String name4 = "мир";
+        String publishingYear4 = "1999";
+        String publishingHouse4 = "Минск";
+        List<String> authors4 = Arrays.asList("Лев");
+        String name5 = "мир";
+        String publishingYear5 = "2020";
+        String publishingHouse5 = "Минск";
+        List<String> authors5 = Arrays.asList("Oleg");
+        String name6 = "Метро 2033";
+        String publishingYear6 = "2015";
+        String publishingHouse6 = "Киев";
+        List<String> authors6 = Arrays.asList("Дмитрий");
         return new Object[][]{
-                {removeBook1},
-                {removeBook2},
-                {removeBook3}
+                {name1, publishingYear1, publishingHouse1, authors1},
+                {name2, publishingYear2, publishingHouse2, authors2},
+                {name3, publishingYear3, publishingHouse3, authors3},
+                {name4, publishingYear4, publishingHouse4, authors4},
+                {name5, publishingYear5, publishingHouse5, authors5},
+                {name6, publishingYear6, publishingHouse6, authors6}
         };
     }
 
-    @Test(dataProvider = "removeBookFromLibraryExceptionData",
+    @Test(dataProvider = "removeBookExceptionData",
             expectedExceptions = ServiceException.class)
-    public void removeBookFromLibraryExceptionTest(Book removeBook)
+    public void removeBookExceptionTest(String name, String publishingYear,
+                                        String publishingHouse,
+                                        List<String> authors)
             throws ServiceException {
-        bookService.removeBook(removeBook);
+        bookService.removeBook(name, publishingYear, publishingHouse, authors);
     }
 
     @Test
     public void findAllBooksPositiveTest() {
-        try {
-            List<Book> actual = bookService.findAllBooks();
-            List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.findAllBooks();
+        List<Book> expected = bookStorageCreator.getCreatedBooks();
+        assertEquals(actual, expected);
     }
 
     @Test
     public void findAllBooksNegativeTest() {
-        try {
-            List<Book> actual = bookService.findAllBooks();
-            List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
-            expected.add(null);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.findAllBooks();
+        List<Book> expected =
+                new ArrayList<>(bookStorageCreator.getCreatedBooks());
+        expected.add(null);
+        assertNotEquals(actual, expected);
     }
 
     @DataProvider(name = "findBookByIdPositiveData")
     public Object[][] createFindBookByIdPositiveData() {
-        long id1 = 1;
+        String id1 = "1";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(BookStorageCreator.getCreatedBooks().get(0));
-        long id2 = 9;
+        expected1.add(bookStorageCreator.getCreatedBooks().get(0));
+        String id2 = "9";
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(9));
-        long id3 = 7;
+        expected2.add(bookStorageCreator.getCreatedBooks().get(9));
+        String id3 = "7";
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(BookStorageCreator.getCreatedBooks().get(6));
-        long id4 = 100_001;
+        expected3.add(bookStorageCreator.getCreatedBooks().get(6));
+        String id4 = "100_001";
         List<Book> expected4 = new ArrayList<>();
-        long id5 = -7;
+        String id5 = "-7";
         List<Book> expected5 = new ArrayList<>();
+        String id6 = "zbc";
+        List<Book> expected6 = new ArrayList<>();
+        String id7 = "15";
+        List<Book> expected7 = new ArrayList<>();
         return new Object[][]{
                 {id1, expected1},
                 {id2, expected2},
                 {id3, expected3},
                 {id4, expected4},
-                {id5, expected5}
+                {id5, expected5},
+                {id6, expected6},
+                {id7, expected7},
         };
     }
 
     @Test(dataProvider = "findBookByIdPositiveData")
-    public void findBookByIdPositiveTest(long id, List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBookById(id);
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    public void findBookByIdPositiveTest(String id, List<Book> expected) {
+        List<Book> actual = bookService.findBookById(id);
+        assertEquals(actual, expected);
     }
 
     @DataProvider(name = "findBookByIdNegativeData")
     public Object[][] createFindBookByIdNegativeData() {
-        long id1 = 1;
+        String id1 = "1";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(BookStorageCreator.getCreatedBooks().get(1));
-        long id2 = 9;
+        expected1.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(0));
+        String id2 = "9";
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(3));
-        long id3 = -7;
+        expected2.add(bookStorageCreator.getCreatedBooks().get(1));
+        String id3 = "7";
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(BookStorageCreator.getCreatedBooks().get(2));
+        String id4 = "100_001";
+        List<Book> expected4 = new ArrayList<>();
+        expected4.add(bookStorageCreator.getCreatedBooks().get(6));
+        String id5 = "-7";
+        List<Book> expected5 = null;
+        String id6 = "zbc";
+        List<Book> expected6 = new ArrayList<>();
+        expected6.add(bookStorageCreator.getCreatedBooks().get(0));
         return new Object[][]{
                 {id1, expected1},
                 {id2, expected2},
-                {id3, expected3}
+                {id3, expected3},
+                {id4, expected4},
+                {id5, expected5},
+                {id6, expected6}
         };
     }
 
     @Test(dataProvider = "findBookByIdNegativeData")
-    public void findBookByIdNegativeTest(long id, List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBookById(id);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    public void findBookByIdNegativeTest(String id, List<Book> expected) {
+        List<Book> actual = bookService.findBookById(id);
+        assertNotEquals(actual, expected);
     }
 
     @DataProvider(name = "findBooksByNamePositiveData")
     public Object[][] createFindBooksByNamePositiveData() {
         String name1 = "Война и мир";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(BookStorageCreator.getCreatedBooks().get(0));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(4));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(4));
         String name2 = "Метро 2033";
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(8));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(8));
         String name3 = "я";
         List<Book> expected3 = new ArrayList<>();
         String name4 = "this is very very long line with 43 symbols";
@@ -337,30 +441,26 @@ public class BookServiceImplTest {
 
     @Test(dataProvider = "findBooksByNamePositiveData")
     public void findBooksByNamePositiveTest(String name, List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByName(name);
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.findBooksByName(name);
+        assertEquals(actual, expected);
     }
 
     @DataProvider(name = "findBooksByNameNegativeData")
     public Object[][] createFindBooksByNameNegativeData() {
         String name1 = "Война и мир";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(BookStorageCreator.getCreatedBooks().get(0));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(3));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(3));
         String name2 = "Метро 2033";
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(8));
-        expected2.add(BookStorageCreator.getCreatedBooks().get(8));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(8));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(8));
         String name3 = "я";
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(BookStorageCreator.getCreatedBooks().get(1));
+        expected3.add(bookStorageCreator.getCreatedBooks().get(1));
         String name4 = "this is very very long line with 43 symbols";
         List<Book> expected4 = new ArrayList<>();
-        expected4.add(BookStorageCreator.getCreatedBooks().get(0));
+        expected4.add(bookStorageCreator.getCreatedBooks().get(0));
         return new Object[][]{
                 {name1, expected1},
                 {name2, expected2},
@@ -371,93 +471,95 @@ public class BookServiceImplTest {
 
     @Test(dataProvider = "findBooksByNameNegativeData")
     public void findBooksByNameNegativeTest(String name, List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByName(name);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.findBooksByName(name);
+        assertNotEquals(actual, expected);
     }
 
-    @DataProvider(name = "findBooksByPricePositiveData")
-    public Object[][] createFindBooksByPricePositiveData() {
-        double price1 = 100;
+    @DataProvider(name = "findBooksByPublishingYearPositiveData")
+    public Object[][] createFindBooksByPublishingYearPositiveData() {
+        String publishingYear1 = "1000";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(BookStorageCreator.getCreatedBooks().get(0));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(4));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(8));
-        double price2 = 1000;
+        expected1.add(bookStorageCreator.getCreatedBooks().get(2));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(6));
+        String publishingYear2 = "1984";
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(2));
-        double price3 = 1;
+        expected2.add(bookStorageCreator.getCreatedBooks().get(0));
+        String publishingYear3 = "2015";
         List<Book> expected3 = new ArrayList<>();
-        double price4 = -100;
+        expected3.add(bookStorageCreator.getCreatedBooks().get(8));
+        String publishingYear4 = "2016";
         List<Book> expected4 = new ArrayList<>();
+        String publishingYear5 = "abc";
+        List<Book> expected5 = new ArrayList<>();
+        String publishingYear6 = "2500";
+        List<Book> expected6 = new ArrayList<>();
         return new Object[][]{
-                {price1, expected1},
-                {price2, expected2},
-                {price3, expected3},
-                {price4, expected4}
+                {publishingYear1, expected1},
+                {publishingYear2, expected2},
+                {publishingYear3, expected3},
+                {publishingYear4, expected4},
+                {publishingYear5, expected5},
+                {publishingYear6, expected6}
         };
     }
 
-    @Test(dataProvider = "findBooksByPricePositiveData")
-    public void findBooksByPricePositiveTest(double price,
-                                             List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByPrice(price);
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBooksByPublishingYearPositiveData")
+    public void findBooksByPublishingYearPositiveTest(String publishingYear,
+                                                      List<Book> expected) {
+        List<Book> actual =
+                bookService.findBooksByPublishingYear(publishingYear);
+        assertEquals(actual, expected);
     }
 
-    @DataProvider(name = "findBooksByPriceNegativeData")
-    public Object[][] createFindBooksByPriceNegativeData() {
-        double price1 = 100;
+    @DataProvider(name = "findBooksByPublishingYearNegativeData")
+    public Object[][] createFindBooksByPublishingYearNegativeData() {
+        String publishingYear1 = "1000";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(BookStorageCreator.getCreatedBooks().get(0));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(4));
-        double price2 = 1000;
+        expected1.add(bookStorageCreator.getCreatedBooks().get(6));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(2));
+        String publishingYear2 = "1984";
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(2));
-        expected2.add(BookStorageCreator.getCreatedBooks().get(2));
-        double price3 = 1;
+        expected2.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(0));
+        String publishingYear3 = "2015";
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(BookStorageCreator.getCreatedBooks().get(2));
-        double price4 = -100;
+        String publishingYear4 = "2016";
         List<Book> expected4 = new ArrayList<>();
-        expected4.add(BookStorageCreator.getCreatedBooks().get(0));
+        expected4.add(bookStorageCreator.getCreatedBooks().get(8));
+        String publishingYear5 = "abc";
+        List<Book> expected5 = null;
+        String publishingYear6 = "2500";
+        List<Book> expected6 = new ArrayList<>();
+        expected6.add(bookStorageCreator.getCreatedBooks().get(0));
         return new Object[][]{
-                {price1, expected1},
-                {price2, expected2},
-                {price3, expected3},
-                {price4, expected4}
+                {publishingYear1, expected1},
+                {publishingYear2, expected2},
+                {publishingYear3, expected3},
+                {publishingYear4, expected4},
+                {publishingYear5, expected5},
+                {publishingYear6, expected6}
         };
     }
 
-    @Test(dataProvider = "findBooksByPriceNegativeData")
-    public void findBooksByPriceNegativeTest(double price,
-                                             List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByPrice(price);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    @Test(dataProvider = "findBooksByPublishingYearNegativeData")
+    public void findBooksByPublishingYearNegativeTest(String publishingYear,
+                                                      List<Book> expected) {
+        List<Book> actual =
+                bookService.findBooksByPublishingYear(publishingYear);
+        assertNotEquals(actual, expected);
     }
 
     @DataProvider(name = "findBooksByPublishingHousePositiveData")
     public Object[][] createFindBooksByPublishingHousePositiveData() {
         String publishingHouse1 = "Минск";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(BookStorageCreator.getCreatedBooks().get(0));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(1));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(6));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(1));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(6));
         String publishingHouse2 = "Москва";
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(4));
-        expected2.add(BookStorageCreator.getCreatedBooks().get(7));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(7));
         String publishingHouse3 = "Витебск";
         List<Book> expected3 = new ArrayList<>();
         String publishingHouse4 = "this is very very long line with 43 symbols";
@@ -473,32 +575,28 @@ public class BookServiceImplTest {
     @Test(dataProvider = "findBooksByPublishingHousePositiveData")
     public void findBooksByPublishingHousePositiveTest(String publishingHouse,
                                                        List<Book> expected) {
-        try {
-            List<Book> actual =
-                    bookService.findBooksByPublishingHouse(publishingHouse);
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual =
+                bookService.findBooksByPublishingHouse(publishingHouse);
+        assertEquals(actual, expected);
     }
 
     @DataProvider(name = "findBooksByPublishingHouseNegativeData")
     public Object[][] createFindBooksByPublishingHouseNegativeData() {
         String publishingHouse1 = "Минск";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(BookStorageCreator.getCreatedBooks().get(0));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(1));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(1));
         String publishingHouse2 = "Москва";
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(4));
-        expected2.add(BookStorageCreator.getCreatedBooks().get(4));
-        expected2.add(BookStorageCreator.getCreatedBooks().get(7));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(7));
         String publishingHouse3 = "Витебск";
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(BookStorageCreator.getCreatedBooks().get(1));
+        expected3.add(bookStorageCreator.getCreatedBooks().get(1));
         String publishingHouse4 = "this is very very long line with 43 symbols";
         List<Book> expected4 = new ArrayList<>();
-        expected4.add(BookStorageCreator.getCreatedBooks().get(0));
+        expected4.add(bookStorageCreator.getCreatedBooks().get(0));
         return new Object[][]{
                 {publishingHouse1, expected1},
                 {publishingHouse2, expected2},
@@ -510,29 +608,25 @@ public class BookServiceImplTest {
     @Test(dataProvider = "findBooksByPublishingHouseNegativeData")
     public void findBooksByPublishingHouseNegativeTest(String publishingHouse,
                                                        List<Book> expected) {
-        try {
-            List<Book> actual =
-                    bookService.findBooksByPublishingHouse(publishingHouse);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual =
+                bookService.findBooksByPublishingHouse(publishingHouse);
+        assertNotEquals(actual, expected);
     }
 
     @DataProvider(name = "findBooksByAuthorPositiveData")
     public Object[][] createFindBooksByAuthorPositiveData() {
         String author1 = "Oleg";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(BookStorageCreator.getCreatedBooks().get(3));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(7));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(9));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(3));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(7));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(9));
         String author2 = "Sapolsky";
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(5));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(5));
         String author3 = "Robert";
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(BookStorageCreator.getCreatedBooks().get(3));
-        expected3.add(BookStorageCreator.getCreatedBooks().get(5));
+        expected3.add(bookStorageCreator.getCreatedBooks().get(3));
+        expected3.add(bookStorageCreator.getCreatedBooks().get(5));
         String author4 = "oleg";
         List<Book> expected4 = new ArrayList<>();
         String author5 = "this is very very long line with 43 symbols";
@@ -549,33 +643,29 @@ public class BookServiceImplTest {
     @Test(dataProvider = "findBooksByAuthorPositiveData")
     public void findBooksByAuthorPositiveTest(String author,
                                               List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByAuthor(author);
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.findBooksByAuthor(author);
+        assertEquals(actual, expected);
     }
 
     @DataProvider(name = "findBooksByAuthorNegativeData")
     public Object[][] createFindBooksByAuthorNegativeData() {
         String author1 = "Oleg";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(BookStorageCreator.getCreatedBooks().get(3));
-        expected1.add(BookStorageCreator.getCreatedBooks().get(7));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(3));
+        expected1.add(bookStorageCreator.getCreatedBooks().get(7));
         String author2 = "Sapolsky";
         List<Book> expected2 = new ArrayList<>();
-        expected2.add(BookStorageCreator.getCreatedBooks().get(5));
-        expected2.add(BookStorageCreator.getCreatedBooks().get(5));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(5));
+        expected2.add(bookStorageCreator.getCreatedBooks().get(5));
         String author3 = "Robert";
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(BookStorageCreator.getCreatedBooks().get(3));
+        expected3.add(bookStorageCreator.getCreatedBooks().get(3));
         String author4 = "oleg";
         List<Book> expected4 = new ArrayList<>();
-        expected4.add(BookStorageCreator.getCreatedBooks().get(5));
+        expected4.add(bookStorageCreator.getCreatedBooks().get(5));
         String author5 = "this is very very long line with 43 symbols";
         List<Book> expected5 = new ArrayList<>();
-        expected5.add(BookStorageCreator.getCreatedBooks().get(0));
+        expected5.add(bookStorageCreator.getCreatedBooks().get(0));
         return new Object[][]{
                 {author1, expected1},
                 {author2, expected2},
@@ -588,173 +678,158 @@ public class BookServiceImplTest {
     @Test(dataProvider = "findBooksByAuthorNegativeData")
     public void findBooksByAuthorNegativeTest(String author,
                                               List<Book> expected) {
-        try {
-            List<Book> actual = bookService.findBooksByAuthor(author);
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.findBooksByAuthor(author);
+        assertNotEquals(actual, expected);
     }
 
     @Test
     public void sortBooksByIdPositiveTest() {
-        try {
-            List<Book> actual = bookService.sortBooksById();
-            List<Book> expected = new ArrayList<>();
-            expected.add(BookStorageCreator.getCreatedBooks().get(0));
-            expected.add(BookStorageCreator.getCreatedBooks().get(1));
-            expected.add(BookStorageCreator.getCreatedBooks().get(2));
-            expected.add(BookStorageCreator.getCreatedBooks().get(3));
-            expected.add(BookStorageCreator.getCreatedBooks().get(4));
-            expected.add(BookStorageCreator.getCreatedBooks().get(5));
-            expected.add(BookStorageCreator.getCreatedBooks().get(6));
-            expected.add(BookStorageCreator.getCreatedBooks().get(7));
-            expected.add(BookStorageCreator.getCreatedBooks().get(9));
-            expected.add(BookStorageCreator.getCreatedBooks().get(8));
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.sortBooksById();
+        List<Book> expected = new ArrayList<>();
+        expected.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected.add(bookStorageCreator.getCreatedBooks().get(1));
+        expected.add(bookStorageCreator.getCreatedBooks().get(2));
+        expected.add(bookStorageCreator.getCreatedBooks().get(3));
+        expected.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected.add(bookStorageCreator.getCreatedBooks().get(5));
+        expected.add(bookStorageCreator.getCreatedBooks().get(6));
+        expected.add(bookStorageCreator.getCreatedBooks().get(7));
+        expected.add(bookStorageCreator.getCreatedBooks().get(9));
+        expected.add(bookStorageCreator.getCreatedBooks().get(8));
+        assertEquals(actual, expected);
     }
 
     @Test
     public void sortBooksByIdNegativeTest() {
-        try {
-            List<Book> actual = bookService.sortBooksById();
-            List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.sortBooksById();
+        List<Book> expected = bookStorageCreator.getCreatedBooks();
+        assertNotEquals(actual, expected);
     }
 
     @Test
     public void sortBooksByNamePositiveTest() {
-        try {
-            List<Book> actual = bookService.sortBooksByName();
-            List<Book> expected = new ArrayList<>();
-            expected.add(BookStorageCreator.getCreatedBooks().get(5));
-            expected.add(BookStorageCreator.getCreatedBooks().get(9));
-            expected.add(BookStorageCreator.getCreatedBooks().get(3));
-            expected.add(BookStorageCreator.getCreatedBooks().get(0));
-            expected.add(BookStorageCreator.getCreatedBooks().get(4));
-            expected.add(BookStorageCreator.getCreatedBooks().get(6));
-            expected.add(BookStorageCreator.getCreatedBooks().get(8));
-            expected.add(BookStorageCreator.getCreatedBooks().get(1));
-            expected.add(BookStorageCreator.getCreatedBooks().get(2));
-            expected.add(BookStorageCreator.getCreatedBooks().get(7));
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.sortBooksByName();
+        List<Book> expected = new ArrayList<>();
+        expected.add(bookStorageCreator.getCreatedBooks().get(5));
+        expected.add(bookStorageCreator.getCreatedBooks().get(9));
+        expected.add(bookStorageCreator.getCreatedBooks().get(3));
+        expected.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected.add(bookStorageCreator.getCreatedBooks().get(6));
+        expected.add(bookStorageCreator.getCreatedBooks().get(8));
+        expected.add(bookStorageCreator.getCreatedBooks().get(1));
+        expected.add(bookStorageCreator.getCreatedBooks().get(2));
+        expected.add(bookStorageCreator.getCreatedBooks().get(7));
+        assertEquals(actual, expected);
     }
 
     @Test
     public void sortBooksByNameNegativeTest() {
-        try {
-            List<Book> actual = bookService.sortBooksByName();
-            List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.sortBooksByName();
+        List<Book> expected = new ArrayList<>();
+        expected.add(bookStorageCreator.getCreatedBooks().get(5));
+        expected.add(bookStorageCreator.getCreatedBooks().get(9));
+        expected.add(bookStorageCreator.getCreatedBooks().get(3));
+        expected.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected.add(bookStorageCreator.getCreatedBooks().get(6));
+        expected.add(bookStorageCreator.getCreatedBooks().get(8));
+        expected.add(bookStorageCreator.getCreatedBooks().get(1));
+        expected.add(bookStorageCreator.getCreatedBooks().get(7));
+        expected.add(bookStorageCreator.getCreatedBooks().get(2));
+        assertNotEquals(actual, expected);
     }
 
     @Test
-    public void sortBooksByPricePositiveTest() {
-        try {
-            List<Book> actual = bookService.sortBooksByPrice();
-            List<Book> expected = new ArrayList<>();
-            expected.add(BookStorageCreator.getCreatedBooks().get(6));
-            expected.add(BookStorageCreator.getCreatedBooks().get(1));
-            expected.add(BookStorageCreator.getCreatedBooks().get(3));
-            expected.add(BookStorageCreator.getCreatedBooks().get(5));
-            expected.add(BookStorageCreator.getCreatedBooks().get(0));
-            expected.add(BookStorageCreator.getCreatedBooks().get(4));
-            expected.add(BookStorageCreator.getCreatedBooks().get(8));
-            expected.add(BookStorageCreator.getCreatedBooks().get(9));
-            expected.add(BookStorageCreator.getCreatedBooks().get(7));
-            expected.add(BookStorageCreator.getCreatedBooks().get(2));
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    public void sortBooksByPublishingYearPositiveTest() {
+        List<Book> actual = bookService.sortBooksByPublishingYear();
+        List<Book> expected = new ArrayList<>();
+        expected.add(bookStorageCreator.getCreatedBooks().get(9));
+        expected.add(bookStorageCreator.getCreatedBooks().get(2));
+        expected.add(bookStorageCreator.getCreatedBooks().get(6));
+        expected.add(bookStorageCreator.getCreatedBooks().get(3));
+        expected.add(bookStorageCreator.getCreatedBooks().get(7));
+        expected.add(bookStorageCreator.getCreatedBooks().get(5));
+        expected.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected.add(bookStorageCreator.getCreatedBooks().get(8));
+        expected.add(bookStorageCreator.getCreatedBooks().get(1));
+        assertEquals(actual, expected);
     }
 
     @Test
-    public void sortBooksByPriceNegativeTest() {
-        try {
-            List<Book> actual = bookService.sortBooksByPrice();
-            List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+    public void sortBooksByPublishingYearNegativeTest() {
+        List<Book> actual = bookService.sortBooksByPublishingYear();
+        List<Book> expected = bookStorageCreator.getCreatedBooks();
+        assertNotEquals(actual, expected);
     }
 
     @Test
     public void sortBooksByPublishingHousePositiveTest() {
-        try {
-            List<Book> actual = bookService.sortBooksByPublishingHouse();
-            List<Book> expected = new ArrayList<>();
-            expected.add(BookStorageCreator.getCreatedBooks().get(5));
-            expected.add(BookStorageCreator.getCreatedBooks().get(9));
-            expected.add(BookStorageCreator.getCreatedBooks().get(8));
-            expected.add(BookStorageCreator.getCreatedBooks().get(0));
-            expected.add(BookStorageCreator.getCreatedBooks().get(1));
-            expected.add(BookStorageCreator.getCreatedBooks().get(6));
-            expected.add(BookStorageCreator.getCreatedBooks().get(4));
-            expected.add(BookStorageCreator.getCreatedBooks().get(7));
-            expected.add(BookStorageCreator.getCreatedBooks().get(2));
-            expected.add(BookStorageCreator.getCreatedBooks().get(3));
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.sortBooksByPublishingHouse();
+        List<Book> expected = new ArrayList<>();
+        expected.add(bookStorageCreator.getCreatedBooks().get(5));
+        expected.add(bookStorageCreator.getCreatedBooks().get(9));
+        expected.add(bookStorageCreator.getCreatedBooks().get(8));
+        expected.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected.add(bookStorageCreator.getCreatedBooks().get(1));
+        expected.add(bookStorageCreator.getCreatedBooks().get(6));
+        expected.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected.add(bookStorageCreator.getCreatedBooks().get(7));
+        expected.add(bookStorageCreator.getCreatedBooks().get(2));
+        expected.add(bookStorageCreator.getCreatedBooks().get(3));
+        assertEquals(actual, expected);
     }
 
     @Test
     public void sortBooksByPublishingHouseNegativeTest() {
-        try {
-            List<Book> actual = bookService.sortBooksByPublishingHouse();
-            List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.sortBooksByPublishingHouse();
+        List<Book> expected = new ArrayList<>();
+        expected.add(bookStorageCreator.getCreatedBooks().get(5));
+        expected.add(bookStorageCreator.getCreatedBooks().get(9));
+        expected.add(bookStorageCreator.getCreatedBooks().get(8));
+        expected.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected.add(bookStorageCreator.getCreatedBooks().get(1));
+        expected.add(bookStorageCreator.getCreatedBooks().get(6));
+        expected.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected.add(bookStorageCreator.getCreatedBooks().get(7));
+        expected.add(bookStorageCreator.getCreatedBooks().get(2));
+        assertNotEquals(actual, expected);
     }
 
     @Test
     public void sortBooksByAuthorsPositiveTest() {
-        try {
-            List<Book> actual = bookService.sortBooksByAuthors();
-            List<Book> expected = new ArrayList<>();
-            expected.add(BookStorageCreator.getCreatedBooks().get(6));
-            expected.add(BookStorageCreator.getCreatedBooks().get(0));
-            expected.add(BookStorageCreator.getCreatedBooks().get(2));
-            expected.add(BookStorageCreator.getCreatedBooks().get(4));
-            expected.add(BookStorageCreator.getCreatedBooks().get(7));
-            expected.add(BookStorageCreator.getCreatedBooks().get(8));
-            expected.add(BookStorageCreator.getCreatedBooks().get(3));
-            expected.add(BookStorageCreator.getCreatedBooks().get(9));
-            expected.add(BookStorageCreator.getCreatedBooks().get(1));
-            expected.add(BookStorageCreator.getCreatedBooks().get(5));
-            assertEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.sortBooksByAuthors();
+        List<Book> expected = new ArrayList<>();
+        expected.add(bookStorageCreator.getCreatedBooks().get(6));
+        expected.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected.add(bookStorageCreator.getCreatedBooks().get(2));
+        expected.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected.add(bookStorageCreator.getCreatedBooks().get(7));
+        expected.add(bookStorageCreator.getCreatedBooks().get(8));
+        expected.add(bookStorageCreator.getCreatedBooks().get(3));
+        expected.add(bookStorageCreator.getCreatedBooks().get(9));
+        expected.add(bookStorageCreator.getCreatedBooks().get(1));
+        expected.add(bookStorageCreator.getCreatedBooks().get(5));
+        assertEquals(actual, expected);
     }
 
     @Test
     public void sortBooksByAuthorsNegativeTest() {
-        try {
-            List<Book> actual = bookService.sortBooksByAuthors();
-            List<Book> expected = new ArrayList<>(BookStorageCreator.getCreatedBooks());
-            assertNotEquals(actual, expected);
-        } catch (ServiceException e) {
-            fail("Incorrect input");
-        }
+        List<Book> actual = bookService.sortBooksByAuthors();
+        List<Book> expected = new ArrayList<>();
+        expected.add(bookStorageCreator.getCreatedBooks().get(6));
+        expected.add(bookStorageCreator.getCreatedBooks().get(0));
+        expected.add(bookStorageCreator.getCreatedBooks().get(2));
+        expected.add(bookStorageCreator.getCreatedBooks().get(4));
+        expected.add(bookStorageCreator.getCreatedBooks().get(7));
+        expected.add(bookStorageCreator.getCreatedBooks().get(8));
+        expected.add(bookStorageCreator.getCreatedBooks().get(3));
+        expected.add(bookStorageCreator.getCreatedBooks().get(9));
+        expected.add(bookStorageCreator.getCreatedBooks().get(1));
+        expected.add(bookStorageCreator.getCreatedBooks().get(5));
+        expected.add(bookStorageCreator.getCreatedBooks().get(5));
+        assertNotEquals(actual, expected);
     }
 }
 
-*/

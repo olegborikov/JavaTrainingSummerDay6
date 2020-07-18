@@ -517,8 +517,7 @@ public class BookListDaoImplTest {
     @Test
     public void sortByIdNegativeTest() {
         List<Book> actual = bookDao.sortById();
-        List<Book> expected =
-                new ArrayList<>(bookStorageCreator.getCreatedBooks());
+        List<Book> expected = bookStorageCreator.getCreatedBooks();
         assertNotEquals(actual, expected);
     }
 
@@ -576,8 +575,7 @@ public class BookListDaoImplTest {
     @Test
     public void sortByPublishingYearNegativeTest() {
         List<Book> actual = bookDao.sortByPublishingYear();
-        List<Book> expected =
-                new ArrayList<>(bookStorageCreator.getCreatedBooks());
+        List<Book> expected = bookStorageCreator.getCreatedBooks();
         assertNotEquals(actual, expected);
     }
 
