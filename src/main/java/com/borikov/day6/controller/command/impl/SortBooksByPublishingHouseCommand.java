@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 public class SortBooksByPublishingHouseCommand implements Command {
-
     @Override
     public Map<String, List<Book>> execute(Map<String, String> data) {
         BookServiceImpl bookService = new BookServiceImpl();

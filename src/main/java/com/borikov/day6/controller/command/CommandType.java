@@ -16,7 +16,7 @@ public enum CommandType {
     SORT_BOOKS_BY_PUBLISHING_YEAR(new SortBooksByPublishingYearCommand()),
     SORT_BOOKS_BY_PUBLISHING_HOUSE(new SortBooksByPublishingHouseCommand()),
     SORT_BOOKS_BY_AUTHORS(new SortBooksByAuthorsCommand());
-    Command command;
+    private final Command command;
 
     CommandType(Command command) {
         this.command = command;

@@ -1,12 +1,14 @@
 package com.borikov.day6.util;
 
 public class BookParser {
+    private static final int DEFAULT_VALUE = -1;
+
     public long parseId(String id) {
         long idParsed;
         try {
             idParsed = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            idParsed = -1;
+            idParsed = DEFAULT_VALUE;
         }
         return idParsed;
     }
@@ -16,7 +18,7 @@ public class BookParser {
         try {
             publishingYearParsed = Integer.parseInt(publishingYear);
         } catch (NumberFormatException e) {
-            publishingYearParsed = -1;
+            publishingYearParsed = DEFAULT_VALUE;
         }
         return publishingYearParsed;
     }
