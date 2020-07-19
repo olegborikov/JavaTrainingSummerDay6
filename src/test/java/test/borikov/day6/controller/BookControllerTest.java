@@ -8,10 +8,7 @@ import com.borikov.day6.model.entity.Book;
 import test.borikov.day6.creator.BookStorageCreator;
 import org.testng.annotations.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.testng.Assert.*;
 
@@ -36,104 +33,166 @@ public class BookControllerTest {
     public void tearDownMethod() throws StorageException {
         bookStorageCreator.setUpBookStorage();
     }
-/*
-    @DataProvider(name = "processRequestNegativeData")
-    public Object[][] createProcessRequestNegativeData() {
-        String request1 = "addbook";
-        String request2 = "addBook";
-        String request3 = "add book";
-        Map<String, String> data = new HashMap<>();
-        Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("allBooks", BookStorageCreator.getCreatedBooks());
-        return new Object[][]{
-                {request1, data, expected},
-                {request2, data, expected},
-                {request3, data, expected}
-        };
-    }
-
-    @Test(dataProvider = "processRequestNegativeData", enabled = false)
-    public void processRequestNegativeTest(String request,
-                                           Map<String, String> data,
-                                           Map<String, List<Book>> expected) {
-        Map<String, List<Book>> actual = bookController.processRequest(request, data);
-        assertEquals(actual, expected);
-    }
 
     @DataProvider(name = "processRequestAddBookPositiveData")
     public Object[][] createProcessRequestAddBookPositiveData() {
         String request = "add_book";
         Map<String, String> data1 = new HashMap<>();
-        data1.put("name", "Qwerty");
-        data1.put("price", "100");
-        data1.put("publishingHouse", "Minsk");
-        data1.put("author1", "Oleg");
-        data1.put("author2", "Pavel");
+        data1.put(DataKeyType.NAME, "Война и мир");
+        data1.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data1.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data1.put(DataKeyType.AUTHOR + "1", "Лев");
+        List<Book> addedBook1 = new ArrayList<>();
+        addedBook1.add(new Book("Война и мир", 2020, "Минск", Arrays.asList("Лев")));
+        Map<String, List<Book>> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyType.ADDED_BOOK, addedBook1);
         Map<String, String> data2 = new HashMap<>();
-        data2.put("name", "???");
-        data2.put("price", "100.1");
-        data2.put("publishingHouse", "Москва");
+        data2.put(DataKeyType.NAME, "This is very very long line with 43 symbols");
+        data2.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data2.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data2.put(DataKeyType.AUTHOR + "1", "Лев");
+        List<Book> addedBook2 = new ArrayList<>();
+        Map<String, List<Book>> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyType.ADDED_BOOK, addedBook2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("name", "Ты");
-        data3.put("price", "10");
-        data3.put("publishingHouse", "Minsk");
-        data3.put("author1", "Oleg");
-        Map<String, String> data4 = new HashMap<>();
-        data4.put("name", "Ты");
-        data4.put("price", "10");
-        data4.put("publishingHouse", "Minsk");
-        data4.put("author2", "Oleg");
-        Map<String, List<Book>> expected = new HashMap<>();
+        data3.put(DataKeyType.NAME, "Война и мир");
+        data3.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data3.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data3.put(DataKeyType.AUTHOR, "Лев");
+        List<Book> addedBook3 = new ArrayList<>();
+        addedBook3.add(new Book("Война и мир", 2020, "Минск", Arrays.asList()));
+        Map<String, List<Book>> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyType.ADDED_BOOK, addedBook3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.ADDED_BOOK, filteredBooks4);
+        Map<String, String> data5 = new HashMap<>();
+        List<Book> filteredBooks5 = new ArrayList<>();
+        Map<String, List<Book>> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyType.ADDED_BOOK, filteredBooks5);
+        Map<String, String> data6 = new HashMap<>();
+        data6.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data6.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data6.put(DataKeyType.AUTHOR + "1", "Лев");
+        List<Book> addedBook6 = new ArrayList<>();
+        Map<String, List<Book>> expected6 = new HashMap<>();
+        expected6.put(ResponseKeyType.ADDED_BOOK, addedBook6);
+        Map<String, String> data7 = new HashMap<>();
+        data7.put(DataKeyType.NAME, "Война и мир");
+        data7.put(DataKeyType.PUBLISHING_YEAR, "1984");
+        data7.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data7.put(DataKeyType.AUTHOR + "1", "Лев Толстой");
+        List<Book> addedBook7 = new ArrayList<>();
+        Map<String, List<Book>> expected7 = new HashMap<>();
+        expected7.put(ResponseKeyType.ERROR, addedBook7);
         return new Object[][]{
-                {request, data1, expected},
-                {request, data2, expected},
-                {request, data3, expected},
-                {request, data4, expected},
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4},
+                {request, data5, expected5},
+                {request, data6, expected6},
+                {request, data7, expected7}
         };
     }
 
-    @Test(dataProvider = "processRequestAddBookPositiveData", enabled = false)
+    @Test(dataProvider = "processRequestAddBookPositiveData")
     public void processRequestAddBookPositiveTest(String request,
                                                   Map<String, String> data,
                                                   Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
-        List<Book> addedBook = new ArrayList<>();
-        //addedBook.add(bookStorage.get().get(bookStorage.get().size() - 1));
-        expected.put("addedBook", addedBook);
-        assertEquals(actual, expected);
+        boolean result;
+        if (actual.get(ResponseKeyType.ADDED_BOOK) != null &&
+                expected.get(ResponseKeyType.ADDED_BOOK) != null &&
+                actual.get(ResponseKeyType.ADDED_BOOK).size() == 1 &&
+                expected.get(ResponseKeyType.ADDED_BOOK).size() == 1) {
+            result = actual.get(ResponseKeyType.ADDED_BOOK).get(0)
+                    .equalsToBook(expected.get(ResponseKeyType.ADDED_BOOK).get(0));
+        } else {
+            result = actual.equals(expected);
+        }
+        assertTrue(result);
     }
 
     @DataProvider(name = "processRequestAddBookNegativeData")
     public Object[][] createProcessRequestAddBookNegativeData() {
         String request = "add_book";
         Map<String, String> data1 = new HashMap<>();
-        Map<String, String> data2 = null;
+        data1.put(DataKeyType.NAME, "Война и мир");
+        data1.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data1.put(DataKeyType.PUBLISHING_HOUSE, "Минск1");
+        data1.put(DataKeyType.AUTHOR + "1", "Лев");
+        List<Book> addedBook1 = new ArrayList<>();
+        addedBook1.add(new Book("Война и мир", 2020, "Минск", Arrays.asList("Лев")));
+        Map<String, List<Book>> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyType.ADDED_BOOK, addedBook1);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyType.NAME, "This is very very long line with 43 symbols");
+        data2.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data2.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data2.put(DataKeyType.AUTHOR + "1", "Лев");
+        List<Book> addedBook2 = new ArrayList<>();
+        addedBook2.add(new Book("Война и мир", 2020, "Минск", Arrays.asList("Лев")));
+        Map<String, List<Book>> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyType.ADDED_BOOK, addedBook2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("name", "Ты");
-        data3.put("price", "10k");
-        data3.put("publishingHouse", "Minsk");
-        data3.put("author1", "Oleg");
-        Map<String, String> data4 = new HashMap<>();
-        data4.put("name", "Ты");
-        data4.put("price", "10");
-        data4.put("publishingHouse", "Minsk");
-        data4.put("author1", "Olegasdasdasdassgdfgdfgdf dfg dfg dfg dfg");
-        Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("addedBook", new ArrayList<>());
+        data3.put(DataKeyType.NAME, "Война и мир");
+        data3.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data3.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data3.put(DataKeyType.AUTHOR, "Лев");
+        List<Book> addedBook3 = new ArrayList<>();
+        Map<String, List<Book>> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyType.ADDED_BOOK, addedBook3);
+        Map<String, String> data4 = null;
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        Map<String, String> data5 = new HashMap<>();
+        List<Book> filteredBooks5 = null;
+        Map<String, List<Book>> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyType.ADDED_BOOK, filteredBooks5);
+        Map<String, String> data6 = new HashMap<>();
+        data6.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data6.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data6.put(DataKeyType.AUTHOR + "1", "Лев");
+        List<Book> addedBook6 = new ArrayList<>();
+        Map<String, List<Book>> expected6 = new HashMap<>();
+        expected6.put(ResponseKeyType.ERROR, addedBook6);
+        Map<String, String> data7 = new HashMap<>();
+        data7.put(DataKeyType.NAME, "Война и мир");
+        data7.put(DataKeyType.PUBLISHING_YEAR, "1984");
+        data7.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data7.put(DataKeyType.AUTHOR + "1", "Лев Толстой");
+        List<Book> addedBook7 = new ArrayList<>();
+        Map<String, List<Book>> expected7 = new HashMap<>();
+        expected7.put(ResponseKeyType.ADDED_BOOK, addedBook7);
         return new Object[][]{
-                {request, data1, expected},
-                {request, data2, expected},
-                {request, data3, expected},
-                {request, data4, expected},
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4},
+                {request, data5, expected5},
+                {request, data6, expected6},
+                {request, data7, expected7}
         };
     }
 
-    @Test(dataProvider = "processRequestAddBookNegativeData", enabled = false)
+    @Test(dataProvider = "processRequestAddBookNegativeData")
     public void processRequestAddBookNegativeTest(String request,
                                                   Map<String, String> data,
                                                   Map<String, List<Book>> expected) {
-        Map<String, List<Book>> actual = bookController.processRequest(request, data);
-        assertEquals(actual, expected);
+        Map<String, List<Book>> actual =
+                bookController.processRequest(request, data);
+        boolean result;
+        if (actual.get(ResponseKeyType.ADDED_BOOK) != null &&
+                expected.get(ResponseKeyType.ADDED_BOOK) != null &&
+                actual.get(ResponseKeyType.ADDED_BOOK).size() == 1 &&
+                expected.get(ResponseKeyType.ADDED_BOOK).size() == 1) {
+            result = actual.get(ResponseKeyType.ADDED_BOOK).get(0)
+                    .equalsToBook(expected.get(ResponseKeyType.ADDED_BOOK).get(0));
+        } else {
+            result = actual.equals(expected);
+        }
+        assertFalse(result);
     }
 
     @DataProvider(name = "processRequestFindAllBooksPositiveData")
@@ -144,7 +203,7 @@ public class BookControllerTest {
         Map<String, String> data3 = new HashMap<>();
         data3.put("first", "first");
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put(DataKeyType.ALL_BOOKS, BookStorageCreator.getCreatedBooks());
+        expected.put(ResponseKeyType.ALL_BOOKS, bookStorageCreator.getCreatedBooks());
         return new Object[][]{
                 {request, data1, expected},
                 {request, data2, expected},
@@ -166,7 +225,7 @@ public class BookControllerTest {
         Map<String, String> data1 = null;
         Map<String, String> data2 = new HashMap<>();
         Map<String, List<Book>> expected1 = new HashMap<>();
-        expected1.put("allbooks", BookStorageCreator.getCreatedBooks());
+        expected1.put(ResponseKeyType.ALL_BOOKS, bookStorageCreator.getCreatedBooks());
         Map<String, List<Book>> expected2 = new HashMap<>();
         return new Object[][]{
                 {request, data1, expected1},
@@ -186,27 +245,42 @@ public class BookControllerTest {
     public Object[][] createProcessRequestFindBooksByIdPositiveData() {
         String request = "find_book_by_id";
         Map<String, String> data1 = new HashMap<>();
-        data1.put("id", "5");
+        data1.put(DataKeyType.ID, "1");
+        List<Book> currentBook1 = new ArrayList<>();
+        currentBook1.add(bookStorageCreator.getCreatedBooks().get(0));
         Map<String, List<Book>> expected1 = new HashMap<>();
-        List<Book> filteredBook1 = new ArrayList<>();
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(4));
-        expected1.put("filteredBook", filteredBook1);
+        expected1.put(ResponseKeyType.CURRENT_BOOK, currentBook1);
         Map<String, String> data2 = new HashMap<>();
-        data2.put("id", "1");
+        data2.put(DataKeyType.ID, "9");
+        List<Book> currentBook2 = new ArrayList<>();
+        currentBook2.add(bookStorageCreator.getCreatedBooks().get(9));
         Map<String, List<Book>> expected2 = new HashMap<>();
-        List<Book> filteredBook2 = new ArrayList<>();
-        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(0));
-        expected2.put("filteredBook", filteredBook2);
+        expected2.put(ResponseKeyType.CURRENT_BOOK, currentBook2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("id", "4");
+        data3.put(DataKeyType.ID, "-7");
+        List<Book> currentBook3 = new ArrayList<>();
         Map<String, List<Book>> expected3 = new HashMap<>();
-        List<Book> filteredBook3 = new ArrayList<>();
-        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(3));
-        expected3.put(DataKeyType.FILTERED_BOOK, filteredBook3);
+        expected3.put(ResponseKeyType.CURRENT_BOOK, currentBook3);
+        Map<String, String> data4 = new HashMap<>();
+        data4.put(DataKeyType.ID, "abc");
+        List<Book> currentBook4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.CURRENT_BOOK, currentBook4);
+        Map<String, String> data5 = null;
+        List<Book> currentBook5 = new ArrayList<>();
+        Map<String, List<Book>> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyType.CURRENT_BOOK, currentBook5);
+        Map<String, String> data6 = new HashMap<>();
+        List<Book> currentBook6 = new ArrayList<>();
+        Map<String, List<Book>> expected6 = new HashMap<>();
+        expected6.put(ResponseKeyType.CURRENT_BOOK, currentBook6);
         return new Object[][]{
                 {request, data1, expected1},
                 {request, data2, expected2},
                 {request, data3, expected3},
+                {request, data4, expected4},
+                {request, data5, expected5},
+                {request, data6, expected6}
         };
     }
 
@@ -221,17 +295,33 @@ public class BookControllerTest {
     @DataProvider(name = "processRequestFindBooksByIdNegativeData")
     public Object[][] createProcessRequestFindBooksByIdNegativeData() {
         String request = "find_book_by_id";
-        Map<String, String> data1 = null;
+        Map<String, String> data1 = new HashMap<>();
+        data1.put(DataKeyType.ID, "1");
+        List<Book> currentBook1 = new ArrayList<>();
+        Map<String, List<Book>> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyType.CURRENT_BOOK, currentBook1);
         Map<String, String> data2 = new HashMap<>();
-        data2.put("id", "1.");
+        data2.put(DataKeyType.ID, "9");
+        List<Book> currentBook2 = new ArrayList<>();
+        currentBook2.add(bookStorageCreator.getCreatedBooks().get(2));
+        Map<String, List<Book>> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyType.CURRENT_BOOK, currentBook2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("id", "100001");
-        Map<String, List<Book>> expected = new HashMap<>();
-        expected.put(DataKeyType.FILTERED_BOOK, new ArrayList<>());
+        data3.put(DataKeyType.ID, "-7");
+        List<Book> currentBook3 = new ArrayList<>();
+        currentBook3.add(bookStorageCreator.getCreatedBooks().get(2));
+        Map<String, List<Book>> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyType.CURRENT_BOOK, currentBook3);
+        Map<String, String> data4 = new HashMap<>();
+        data4.put(DataKeyType.ID, "abc");
+        List<Book> currentBook4 = null;
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.CURRENT_BOOK, currentBook4);
         return new Object[][]{
-                {request, data1, expected},
-                {request, data2, expected},
-                {request, data3, expected},
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4}
         };
     }
 
@@ -240,41 +330,45 @@ public class BookControllerTest {
                                                         Map<String, String> data,
                                                         Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
-        assertEquals(actual, expected);
+        assertNotEquals(actual, expected);
     }
 
     @DataProvider(name = "processRequestFindBooksByAuthorPositiveData")
     public Object[][] createProcessRequestFindBooksByAuthorPositiveData() {
         String request = "find_books_by_author";
         Map<String, String> data1 = new HashMap<>();
-        data1.put("author", "Oleg");
+        data1.put(DataKeyType.AUTHOR, "Oleg");
+        List<Book> filteredBooks1 = new ArrayList<>();
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(3));
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(7));
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(9));
         Map<String, List<Book>> expected1 = new HashMap<>();
-        List<Book> filteredBook1 = new ArrayList<>();
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(3));
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(7));
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(9));
-        expected1.put("filteredBooks", filteredBook1);
+        expected1.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks1);
         Map<String, String> data2 = new HashMap<>();
-        data2.put("author", "Sapolsky");
+        data2.put(DataKeyType.AUTHOR, "Sapolsky");
+        List<Book> filteredBooks2 = new ArrayList<>();
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(5));
         Map<String, List<Book>> expected2 = new HashMap<>();
-        List<Book> filteredBook2 = new ArrayList<>();
-        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(5));
-        expected2.put("filteredBooks", filteredBook2);
+        expected2.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("author", "Robert");
+        data3.put(DataKeyType.AUTHOR, "qwe");
+        List<Book> filteredBooks3 = new ArrayList<>();
         Map<String, List<Book>> expected3 = new HashMap<>();
-        List<Book> filteredBook3 = new ArrayList<>();
-        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(3));
-        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(5));
-        expected3.put("filteredBooks", filteredBook3);
-        List<Book> filteredBook4 = new ArrayList<>();
+        expected3.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = new ArrayList<>();
         Map<String, List<Book>> expected4 = new HashMap<>();
-        expected4.put(DataKeyType.FILTERED_BOOKS, filteredBook4);
+        expected4.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks4);
+        Map<String, String> data5 = new HashMap<>();
+        List<Book> filteredBooks5 = new ArrayList<>();
+        Map<String, List<Book>> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks5);
         return new Object[][]{
                 {request, data1, expected1},
                 {request, data2, expected2},
                 {request, data3, expected3},
-                {request, null, expected4}
+                {request, data4, expected4},
+                {request, data5, expected5}
         };
     }
 
@@ -289,17 +383,34 @@ public class BookControllerTest {
     @DataProvider(name = "processRequestFindBooksByAuthorNegativeData")
     public Object[][] createProcessRequestFindBooksByAuthorNegativeData() {
         String request = "find_books_by_author";
-        Map<String, String> data1 = null;
+        Map<String, String> data1 = new HashMap<>();
+        data1.put(DataKeyType.AUTHOR, "Oleg");
+        List<Book> filteredBooks1 = new ArrayList<>();
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(3));
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(7));
+        Map<String, List<Book>> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks1);
         Map<String, String> data2 = new HashMap<>();
-        data2.put("author", "dsa");
+        data2.put(DataKeyType.AUTHOR, "Sapolsky");
+        List<Book> filteredBooks2 = new ArrayList<>();
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(5));
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(5));
+        Map<String, List<Book>> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("author", "Olegewqe qwe qwe qwe qwe qwe qwe qw eqwe qw eewq ");
-        Map<String, List<Book>> expected = new HashMap<>();
-        expected.put(DataKeyType.FILTERED_BOOKS, new ArrayList<>());
+        data3.put(DataKeyType.AUTHOR, "Oleg");
+        List<Book> filteredBooks3 = new ArrayList<>();
+        Map<String, List<Book>> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.SORTED_BOOKS, filteredBooks4);
         return new Object[][]{
-                {request, data1, expected},
-                {request, data2, expected},
-                {request, data3, expected},
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4}
         };
     }
 
@@ -308,35 +419,44 @@ public class BookControllerTest {
                                                             Map<String, String> data,
                                                             Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
-        assertEquals(actual, expected);
+        assertNotEquals(actual, expected);
     }
 
     @DataProvider(name = "processRequestFindBooksByNamePositiveData")
     public Object[][] createProcessRequestFindBooksByNamePositiveData() {
         String request = "find_books_by_name";
         Map<String, String> data1 = new HashMap<>();
-        data1.put("name", "Война и мир");
+        data1.put(DataKeyType.NAME, "Война и мир");
+        List<Book> filteredBooks1 = new ArrayList<>();
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(0));
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(4));
         Map<String, List<Book>> expected1 = new HashMap<>();
-        List<Book> filteredBook1 = new ArrayList<>();
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(0));
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(4));
-        expected1.put("filteredBooks", filteredBook1);
+        expected1.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks1);
         Map<String, String> data2 = new HashMap<>();
-        data2.put("name", "Метро 2033");
+        data2.put(DataKeyType.NAME, "Метро 2033");
+        List<Book> filteredBooks2 = new ArrayList<>();
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(8));
         Map<String, List<Book>> expected2 = new HashMap<>();
-        List<Book> filteredBook2 = new ArrayList<>();
-        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(8));
-        expected2.put("filteredBooks", filteredBook2);
+        expected2.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("name", "Я");
+        data3.put(DataKeyType.NAME, "qwe");
+        List<Book> filteredBooks3 = new ArrayList<>();
         Map<String, List<Book>> expected3 = new HashMap<>();
-        List<Book> filteredBook3 = new ArrayList<>();
-        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(7));
-        expected3.put("filteredBooks", filteredBook3);
+        expected3.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks4);
+        Map<String, String> data5 = new HashMap<>();
+        List<Book> filteredBooks5 = new ArrayList<>();
+        Map<String, List<Book>> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks5);
         return new Object[][]{
                 {request, data1, expected1},
                 {request, data2, expected2},
                 {request, data3, expected3},
+                {request, data4, expected4},
+                {request, data5, expected5}
         };
     }
 
@@ -351,17 +471,33 @@ public class BookControllerTest {
     @DataProvider(name = "processRequestFindBooksByNameNegativeData")
     public Object[][] createProcessRequestFindBooksByNameNegativeData() {
         String request = "find_books_by_name";
-        Map<String, String> data1 = null;
+        Map<String, String> data1 = new HashMap<>();
+        data1.put(DataKeyType.NAME, "Война и мир");
+        List<Book> filteredBooks1 = new ArrayList<>();
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(0));
+        Map<String, List<Book>> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks1);
         Map<String, String> data2 = new HashMap<>();
-        data2.put("name", "dsa");
+        data2.put(DataKeyType.NAME, "Метро 2033");
+        List<Book> filteredBooks2 = new ArrayList<>();
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(8));
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(8));
+        Map<String, List<Book>> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("name", "Olegewqe qwe qwe qwe qwe qwe qwe qw eqwe qw eewq ");
-        Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("filteredBooks", new ArrayList<>());
+        data3.put(DataKeyType.NAME, "Война и мир");
+        List<Book> filteredBooks3 = new ArrayList<>();
+        Map<String, List<Book>> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.SORTED_BOOKS, filteredBooks4);
         return new Object[][]{
-                {request, data1, expected},
-                {request, data2, expected},
-                {request, data3, expected},
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4}
         };
     }
 
@@ -370,101 +506,46 @@ public class BookControllerTest {
                                                           Map<String, String> data,
                                                           Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
-        assertEquals(actual, expected);
-    }
-
-    @DataProvider(name = "processRequestFindBooksByPricePositiveData")
-    public Object[][] createProcessRequestFindBooksByPricePositiveData() {
-        String request = "find_books_by_price";
-        Map<String, String> data1 = new HashMap<>();
-        data1.put("price", "100");
-        Map<String, List<Book>> expected1 = new HashMap<>();
-        List<Book> filteredBook1 = new ArrayList<>();
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(0));
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(4));
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(8));
-        expected1.put("filteredBooks", filteredBook1);
-        Map<String, String> data2 = new HashMap<>();
-        data2.put("price", "1000");
-        Map<String, List<Book>> expected2 = new HashMap<>();
-        List<Book> filteredBook2 = new ArrayList<>();
-        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(2));
-        expected2.put("filteredBooks", filteredBook2);
-        Map<String, String> data3 = new HashMap<>();
-        data3.put("price", "10");
-        Map<String, List<Book>> expected3 = new HashMap<>();
-        List<Book> filteredBook3 = new ArrayList<>();
-        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(6));
-        expected3.put("filteredBooks", filteredBook3);
-        return new Object[][]{
-                {request, data1, expected1},
-                {request, data2, expected2},
-                {request, data3, expected3},
-        };
-    }
-
-    @Test(dataProvider = "processRequestFindBooksByPricePositiveData")
-    public void processRequestFindBooksByPricePositiveTest(String request,
-                                                           Map<String, String> data,
-                                                           Map<String, List<Book>> expected) {
-        Map<String, List<Book>> actual = bookController.processRequest(request, data);
-        assertEquals(actual, expected);
-    }
-
-    @DataProvider(name = "processRequestFindBooksByPriceNegativeData")
-    public Object[][] createProcessRequestFindBooksByPriceNegativeData() {
-        String request = "find_books_by_price";
-        Map<String, String> data1 = null;
-        Map<String, String> data2 = new HashMap<>();
-        data2.put("price", "1001");
-        Map<String, String> data3 = new HashMap<>();
-        data3.put("price", "10j");
-        Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("filteredBooks", new ArrayList<>());
-        return new Object[][]{
-                {request, data1, expected},
-                {request, data2, expected},
-                {request, data3, expected},
-        };
-    }
-
-    @Test(dataProvider = "processRequestFindBooksByPriceNegativeData")
-    public void processRequestFindBooksByPriceNegativeTest(String request,
-                                                           Map<String, String> data,
-                                                           Map<String, List<Book>> expected) {
-        Map<String, List<Book>> actual = bookController.processRequest(request, data);
-        assertEquals(actual, expected);
+        assertNotEquals(actual, expected);
     }
 
     @DataProvider(name = "processRequestFindBooksByPublishingHousePositiveData")
     public Object[][] createProcessRequestFindBooksByPublishingHousePositiveData() {
         String request = "find_books_by_publishing_house";
         Map<String, String> data1 = new HashMap<>();
-        data1.put("publishingHouse", "Минск");
+        data1.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        List<Book> filteredBooks1 = new ArrayList<>();
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(0));
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(1));
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(6));
         Map<String, List<Book>> expected1 = new HashMap<>();
-        List<Book> filteredBook1 = new ArrayList<>();
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(0));
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(1));
-        filteredBook1.add(BookStorageCreator.getCreatedBooks().get(6));
-        expected1.put("filteredBooks", filteredBook1);
+        expected1.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks1);
         Map<String, String> data2 = new HashMap<>();
-        data2.put("publishingHouse", "Москва");
+        data2.put(DataKeyType.PUBLISHING_HOUSE, "Москва");
+        List<Book> filteredBooks2 = new ArrayList<>();
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(4));
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(7));
         Map<String, List<Book>> expected2 = new HashMap<>();
-        List<Book> filteredBook2 = new ArrayList<>();
-        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(4));
-        filteredBook2.add(BookStorageCreator.getCreatedBooks().get(7));
-        expected2.put("filteredBooks", filteredBook2);
+        expected2.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("publishingHouse", "London");
+        data3.put(DataKeyType.PUBLISHING_HOUSE, "qwe");
+        List<Book> filteredBooks3 = new ArrayList<>();
         Map<String, List<Book>> expected3 = new HashMap<>();
-        List<Book> filteredBook3 = new ArrayList<>();
-        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(5));
-        filteredBook3.add(BookStorageCreator.getCreatedBooks().get(9));
-        expected3.put("filteredBooks", filteredBook3);
+        expected3.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks4);
+        Map<String, String> data5 = new HashMap<>();
+        List<Book> filteredBooks5 = new ArrayList<>();
+        Map<String, List<Book>> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks5);
         return new Object[][]{
                 {request, data1, expected1},
                 {request, data2, expected2},
                 {request, data3, expected3},
+                {request, data4, expected4},
+                {request, data5, expected5}
         };
     }
 
@@ -480,16 +561,34 @@ public class BookControllerTest {
     public Object[][] createProcessRequestFindBooksByPublishingHouseNegativeData() {
         String request = "find_books_by_publishing_house";
         Map<String, String> data1 = new HashMap<>();
-        data1.put("publishingHouse", "Витебск");
-        Map<String, String> data2 = null;
+        data1.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        List<Book> filteredBooks1 = new ArrayList<>();
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(0));
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(1));
+        Map<String, List<Book>> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks1);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyType.PUBLISHING_HOUSE, "Москва");
+        List<Book> filteredBooks2 = new ArrayList<>();
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(4));
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(7));
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(7));
+        Map<String, List<Book>> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("publishingHouse", "Londoqweqweqw qe q ewq ewqe qewq qwe qwe n");
-        Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("filteredBooks", new ArrayList<>());
+        data3.put(DataKeyType.PUBLISHING_HOUSE, "Киев");
+        List<Book> filteredBooks3 = new ArrayList<>();
+        Map<String, List<Book>> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.SORTED_BOOKS, filteredBooks4);
         return new Object[][]{
-                {request, data1, expected},
-                {request, data2, expected},
-                {request, data3, expected},
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4}
         };
     }
 
@@ -498,73 +597,276 @@ public class BookControllerTest {
                                                                      Map<String, String> data,
                                                                      Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        assertNotEquals(actual, expected);
+    }
+
+    @DataProvider(name = "processRequestFindBooksByPublishingYearPositiveData")
+    public Object[][] createProcessRequestFindBooksByPublishingYearPositiveData() {
+        String request = "find_books_by_publishing_year";
+        Map<String, String> data1 = new HashMap<>();
+        data1.put(DataKeyType.PUBLISHING_YEAR, "1000");
+        List<Book> filteredBooks1 = new ArrayList<>();
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(2));
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(6));
+        Map<String, List<Book>> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks1);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyType.PUBLISHING_YEAR, "1984");
+        List<Book> filteredBooks2 = new ArrayList<>();
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(0));
+        Map<String, List<Book>> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks2);
+        Map<String, String> data3 = new HashMap<>();
+        data3.put(DataKeyType.PUBLISHING_YEAR, "1230");
+        List<Book> filteredBooks3 = new ArrayList<>();
+        Map<String, List<Book>> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks4);
+        Map<String, String> data5 = new HashMap<>();
+        List<Book> filteredBooks5 = new ArrayList<>();
+        Map<String, List<Book>> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks5);
+        Map<String, String> data6 = new HashMap<>();
+        data6.put(DataKeyType.PUBLISHING_YEAR, "abc");
+        List<Book> filteredBooks6 = new ArrayList<>();
+        Map<String, List<Book>> expected6 = new HashMap<>();
+        expected6.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks6);
+        Map<String, String> data7 = new HashMap<>();
+        data7.put(DataKeyType.PUBLISHING_YEAR, "-1000");
+        List<Book> filteredBooks7 = new ArrayList<>();
+        Map<String, List<Book>> expected7 = new HashMap<>();
+        expected7.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks7);
+        return new Object[][]{
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4},
+                {request, data5, expected5},
+                {request, data6, expected6},
+                {request, data7, expected7}
+        };
+    }
+
+    @Test(dataProvider = "processRequestFindBooksByPublishingYearPositiveData")
+    public void processRequestFindBooksByPublishingYearPositiveTest(String request,
+                                                                    Map<String, String> data,
+                                                                    Map<String, List<Book>> expected) {
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
         assertEquals(actual, expected);
+    }
+
+    @DataProvider(name = "processRequestFindBooksByPublishingYearNegativeData")
+    public Object[][] createProcessRequestFindBooksByPublishingYearNegativeData() {
+        String request = "find_books_by_publishing_year";
+        Map<String, String> data1 = new HashMap<>();
+        data1.put(DataKeyType.PUBLISHING_YEAR, "1000");
+        List<Book> filteredBooks1 = new ArrayList<>();
+        filteredBooks1.add(bookStorageCreator.getCreatedBooks().get(2));
+        Map<String, List<Book>> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks1);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyType.PUBLISHING_YEAR, "1984");
+        List<Book> filteredBooks2 = new ArrayList<>();
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(0));
+        filteredBooks2.add(bookStorageCreator.getCreatedBooks().get(0));
+        Map<String, List<Book>> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks2);
+        Map<String, String> data3 = new HashMap<>();
+        data3.put(DataKeyType.PUBLISHING_YEAR, "1500");
+        List<Book> filteredBooks3 = new ArrayList<>();
+        Map<String, List<Book>> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.SORTED_BOOKS, filteredBooks4);
+        return new Object[][]{
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4}
+        };
+    }
+
+    @Test(dataProvider = "processRequestFindBooksByPublishingYearNegativeData")
+    public void processRequestFindBooksByPublishingYearNegativeTest(String request,
+                                                                    Map<String, String> data,
+                                                                    Map<String, List<Book>> expected) {
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        assertNotEquals(actual, expected);
     }
 
     @DataProvider(name = "processRequestRemoveBookPositiveData")
     public Object[][] createProcessRemoveBookPositiveData() {
-        String request = "add_book";
+        String request = "remove_book";
         Map<String, String> data1 = new HashMap<>();
-        data1.put("name", "Qwerty");
-        data1.put("price", "100");
-        data1.put("publishingHouse", "Minsk");
-        data1.put("author1", "Oleg");
-        data1.put("author2", "Pavel");
+        data1.put(DataKeyType.NAME, "Война и мир");
+        data1.put(DataKeyType.PUBLISHING_YEAR, "1990");
+        data1.put(DataKeyType.PUBLISHING_HOUSE, "Москва");
+        data1.put(DataKeyType.AUTHOR + "1", "Лев Толстой");
+        List<Book> removedBook1 = new ArrayList<>();
+        removedBook1.add(new Book("Война и мир", 1990,
+                "Москва", Arrays.asList("Лев Толстой")));
+        Map<String, List<Book>> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyType.REMOVED_BOOK, removedBook1);
         Map<String, String> data2 = new HashMap<>();
-        data2.put("name", "???");
-        data2.put("price", "100.1");
-        data2.put("publishingHouse", "Москва");
+        data2.put(DataKeyType.NAME, "This is very very long line with 43 symbols");
+        data2.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data2.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data2.put(DataKeyType.AUTHOR + "1", "Лев");
+        List<Book> removedBook2 = new ArrayList<>();
+        Map<String, List<Book>> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyType.REMOVED_BOOK, removedBook2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("name", "Ты");
-        data3.put("price", "10");
-        data3.put("publishingHouse", "Minsk");
-        data3.put("author1", "Oleg");
-        Map<String, List<Book>> expected = new HashMap<>();
+        data3.put(DataKeyType.NAME, "История Минска");
+        data3.put(DataKeyType.PUBLISHING_YEAR, "1000");
+        data3.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data3.put(DataKeyType.AUTHOR, "Лев");
+        List<Book> addedBook3 = new ArrayList<>();
+        addedBook3.add(bookStorageCreator.getCreatedBooks().get(6));
+        Map<String, List<Book>> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyType.REMOVED_BOOK, addedBook3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = new ArrayList<>();
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.REMOVED_BOOK, filteredBooks4);
+        Map<String, String> data5 = new HashMap<>();
+        List<Book> filteredBooks5 = new ArrayList<>();
+        Map<String, List<Book>> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyType.REMOVED_BOOK, filteredBooks5);
+        Map<String, String> data6 = new HashMap<>();
+        data6.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data6.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data6.put(DataKeyType.AUTHOR + "1", "Лев");
+        List<Book> addedBook6 = new ArrayList<>();
+        Map<String, List<Book>> expected6 = new HashMap<>();
+        expected6.put(ResponseKeyType.REMOVED_BOOK, addedBook6);
+        Map<String, String> data7 = new HashMap<>();
+        data7.put(DataKeyType.NAME, "Война и мир1");
+        data7.put(DataKeyType.PUBLISHING_YEAR, "1984");
+        data7.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data7.put(DataKeyType.AUTHOR + "1", "Лев Толстой");
+        List<Book> addedBook7 = new ArrayList<>();
+        Map<String, List<Book>> expected7 = new HashMap<>();
+        expected7.put(ResponseKeyType.ERROR, addedBook7);
         return new Object[][]{
-                {request, data1, expected},
-                {request, data2, expected},
-                {request, data3, expected}
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4},
+                {request, data5, expected5},
+                {request, data6, expected6},
+                {request, data7, expected7}
         };
     }
 
-    @Test(dataProvider = "processRequestRemoveBookPositiveData",
-            enabled = false)
+    @Test(dataProvider = "processRequestRemoveBookPositiveData")
     public void processRequestRemoveBookPositiveTest(String request,
                                                      Map<String, String> data,
                                                      Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
-        assertEquals(actual, expected);
+        boolean result;
+        if (actual.get(ResponseKeyType.REMOVED_BOOK) != null &&
+                expected.get(ResponseKeyType.REMOVED_BOOK) != null &&
+                actual.get(ResponseKeyType.REMOVED_BOOK).size() == 1 &&
+                expected.get(ResponseKeyType.REMOVED_BOOK).size() == 1) {
+            result = actual.get(ResponseKeyType.REMOVED_BOOK).get(0)
+                    .equalsToBook(expected.get(ResponseKeyType.REMOVED_BOOK).get(0));
+        } else {
+            result = actual.equals(expected);
+        }
+        assertTrue(result);
     }
 
     @DataProvider(name = "processRequestRemoveBookNegativeData")
     public Object[][] createProcessRequestRemoveBookNegativeData() {
         String request = "remove_book";
         Map<String, String> data1 = new HashMap<>();
-        data1.put("publishingHouse", "Витебск");
-        Map<String, String> data2 = null;
+        data1.put(DataKeyType.NAME, "Война и мир");
+        data1.put(DataKeyType.PUBLISHING_YEAR, "1990");
+        data1.put(DataKeyType.PUBLISHING_HOUSE, "Москва");
+        data1.put(DataKeyType.AUTHOR + "1", "Лев Толстой");
+        List<Book> removedBook1 = new ArrayList<>();
+        removedBook1.add(new Book("Война и мир", 1991,
+                "Москва", Arrays.asList("Лев Толстой")));
+        Map<String, List<Book>> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyType.REMOVED_BOOK, removedBook1);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyType.NAME, "This is very very long line with 43 symbols");
+        data2.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data2.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data2.put(DataKeyType.AUTHOR + "1", "Лев");
+        List<Book> removedBook2 = new ArrayList<>();
+        removedBook2.add(null);
+        Map<String, List<Book>> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyType.REMOVED_BOOK, removedBook2);
         Map<String, String> data3 = new HashMap<>();
-        data3.put("publishingHouse", "Londoqweqweqw qe q ewq ewqe qewq qwe qwe n");
-        Map<String, List<Book>> expected = new HashMap<>();
-        expected.put("filteredBooks", new ArrayList<>());
+        data3.put(DataKeyType.NAME, "История Минска");
+        data3.put(DataKeyType.PUBLISHING_YEAR, "1000");
+        data3.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data3.put(DataKeyType.AUTHOR, "Лев");
+        List<Book> addedBook3 = new ArrayList<>();
+        addedBook3.add(bookStorageCreator.getCreatedBooks().get(3));
+        Map<String, List<Book>> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyType.REMOVED_BOOK, addedBook3);
+        Map<String, String> data4 = null;
+        List<Book> filteredBooks4 = null;
+        Map<String, List<Book>> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyType.REMOVED_BOOK, filteredBooks4);
+        Map<String, String> data5 = new HashMap<>();
+        List<Book> filteredBooks5 = null;
+        Map<String, List<Book>> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyType.REMOVED_BOOK, filteredBooks5);
+        Map<String, String> data6 = new HashMap<>();
+        data6.put(DataKeyType.PUBLISHING_YEAR, "2020");
+        data6.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data6.put(DataKeyType.AUTHOR + "1", "Лев");
+        List<Book> addedBook6 = new ArrayList<>();
+        Map<String, List<Book>> expected6 = new HashMap<>();
+        expected6.put(ResponseKeyType.ERROR, addedBook6);
+        Map<String, String> data7 = new HashMap<>();
+        data7.put(DataKeyType.NAME, "Война и мир1");
+        data7.put(DataKeyType.PUBLISHING_YEAR, "1984");
+        data7.put(DataKeyType.PUBLISHING_HOUSE, "Минск");
+        data7.put(DataKeyType.AUTHOR + "1", "Лев Толстой");
+        List<Book> addedBook7 = new ArrayList<>();
+        Map<String, List<Book>> expected7 = new HashMap<>();
+        expected7.put(ResponseKeyType.REMOVED_BOOK, addedBook7);
         return new Object[][]{
-                {request, data1, expected},
-                {request, data2, expected},
-                {request, data3, expected},
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4},
+                {request, data5, expected5},
+                {request, data6, expected6},
+                {request, data7, expected7}
         };
     }
 
-    @Test(dataProvider = "processRequestRemoveBookNegativeData",
-            enabled = false)
+    @Test(dataProvider = "processRequestRemoveBookNegativeData")
     public void processRequestRemoveBookNegativeTest(String request,
                                                      Map<String, String> data,
                                                      Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
-        assertEquals(actual, expected);
-    }*/
+        boolean result;
+        if (actual.get(ResponseKeyType.REMOVED_BOOK) != null &&
+                expected.get(ResponseKeyType.REMOVED_BOOK) != null &&
+                actual.get(ResponseKeyType.REMOVED_BOOK).size() == 1 &&
+                expected.get(ResponseKeyType.REMOVED_BOOK).size() == 1) {
+            result = actual.get(ResponseKeyType.REMOVED_BOOK).get(0)
+                    .equalsToBook(expected.get(ResponseKeyType.REMOVED_BOOK).get(0));
+        } else {
+            result = actual.equals(expected);
+        }
+        assertFalse(result);
+    }
 
     @Test()
     public void processRequestSortBooksByAuthorsPositiveTest() {
-        String request = "Sort_Books_By_Authors";
+        String request = "sort_books_by_authors";
         Map<String, String> data = new HashMap<>();
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
         List<Book> sortedBooks = new ArrayList<>();
@@ -585,7 +887,7 @@ public class BookControllerTest {
 
     @Test()
     public void processRequestSortBooksByAuthorsNegativeTest() {
-        String request = "Sort_Books_By_Authors";
+        String request = "sort_books_by_authors";
         Map<String, String> data = new HashMap<>();
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
         List<Book> sortedBooks = new ArrayList<>();
@@ -605,4 +907,196 @@ public class BookControllerTest {
         assertNotEquals(actual, expected);
     }
 
+    @Test()
+    public void processRequestSortBooksByIdHousePositiveTest() {
+        String request = "sort_books_by_id";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        List<Book> sortedBooks = new ArrayList<>();
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(0));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(1));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(2));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(3));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(4));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(5));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(6));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(7));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(9));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(8));
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        assertEquals(actual, expected);
+    }
+
+    @Test()
+    public void processRequestSortBooksByIdNegativeTest() {
+        String request = "sort_books_by_id";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        List<Book> sortedBooks = bookStorageCreator.getCreatedBooks();
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        assertNotEquals(actual, expected);
+    }
+
+    @Test()
+    public void processRequestSortBooksByNameHousePositiveTest() {
+        String request = "sort_books_by_name";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        List<Book> sortedBooks = new ArrayList<>();
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(5));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(9));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(3));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(0));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(4));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(6));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(8));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(1));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(2));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(7));
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        assertEquals(actual, expected);
+    }
+
+    @Test()
+    public void processRequestSortBooksByNameNegativeTest() {
+        String request = "sort_books_by_name";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        List<Book> sortedBooks = new ArrayList<>();
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(5));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(9));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(3));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(0));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(4));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(6));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(8));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(1));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(7));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(2));
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        assertNotEquals(actual, expected);
+    }
+
+    @Test()
+    public void processRequestSortBooksByPublishingHousePositiveTest() {
+        String request = "sort_books_by_publishing_house";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        List<Book> sortedBooks = new ArrayList<>();
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(5));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(9));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(8));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(0));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(1));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(6));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(4));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(7));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(2));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(3));
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        assertEquals(actual, expected);
+    }
+
+    @Test()
+    public void processRequestSortBooksByPublishingHouseNegativeTest() {
+        String request = "sort_books_by_publishing_house";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        List<Book> sortedBooks = new ArrayList<>();
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(5));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(9));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(8));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(0));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(1));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(6));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(4));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(7));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(2));
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        assertNotEquals(actual, expected);
+    }
+
+    @Test()
+    public void processRequestSortBooksByPublishingYearPositiveTest() {
+        String request = "sort_books_by_publishing_year";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        List<Book> sortedBooks = new ArrayList<>();
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(9));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(2));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(6));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(3));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(7));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(5));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(0));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(4));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(8));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(1));
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        assertEquals(actual, expected);
+    }
+
+    @Test()
+    public void processRequestSortBooksByPublishingYearNegativeTest() {
+        String request = "sort_books_by_publishing_year";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        List<Book> sortedBooks = bookStorageCreator.getCreatedBooks();
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        assertNotEquals(actual, expected);
+    }
+
+    @DataProvider(name = "processRequestPositiveData")
+    public Object[][] createProcessRequestPositiveData() {
+        String request1 = "addbook";
+        String request2 = "addBook";
+        String request3 = "add book";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.ALL_BOOKS, bookStorageCreator.getCreatedBooks());
+        return new Object[][]{
+                {request1, data, expected},
+                {request2, data, expected},
+                {request3, data, expected}
+        };
+    }
+
+    @Test(dataProvider = "processRequestPositiveData")
+    public void processRequestPositiveTest(String request,
+                                           Map<String, String> data,
+                                           Map<String, List<Book>> expected) {
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        assertEquals(actual, expected);
+    }
+
+    @DataProvider(name = "processRequestNegativeData")
+    public Object[][] createProcessRequestNegativeData() {
+        String request1 = "addbook";
+        String request2 = "addBook";
+        String request3 = "add book";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.CURRENT_BOOK, bookStorageCreator.getCreatedBooks());
+        return new Object[][]{
+                {request1, data, expected},
+                {request2, data, null},
+                {request3, data, new HashMap<>()}
+        };
+    }
+
+    @Test(dataProvider = "processRequestNegativeData")
+    public void processRequestNegativeTest(String request,
+                                           Map<String, String> data,
+                                           Map<String, List<Book>> expected) {
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        assertNotEquals(actual, expected);
+    }
 }
