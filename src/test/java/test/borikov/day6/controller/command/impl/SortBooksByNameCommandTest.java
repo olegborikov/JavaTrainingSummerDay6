@@ -1,7 +1,7 @@
 package test.borikov.day6.controller.command.impl;
 
 import com.borikov.day6.controller.command.impl.SortBooksByNameCommand;
-import com.borikov.day6.controller.command.impl.constant.ResponseKeyType;
+import com.borikov.day6.controller.command.impl.constant.ResponseKeyName;
 import com.borikov.day6.exception.StorageException;
 import com.borikov.day6.model.entity.Book;
 import org.testng.annotations.AfterClass;
@@ -55,7 +55,7 @@ public class SortBooksByNameCommandTest {
         sortedBooks.add(bookStorageCreator.getCreatedBooks().get(2));
         sortedBooks.add(bookStorageCreator.getCreatedBooks().get(7));
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        expected.put(ResponseKeyName.SORTED_BOOKS, sortedBooks);
         assertEquals(actual, expected);
     }
 
@@ -75,7 +75,7 @@ public class SortBooksByNameCommandTest {
         sortedBooks.add(bookStorageCreator.getCreatedBooks().get(7));
         sortedBooks.add(bookStorageCreator.getCreatedBooks().get(2));
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        expected.put(ResponseKeyName.SORTED_BOOKS, sortedBooks);
         assertNotEquals(actual, expected);
     }
 }

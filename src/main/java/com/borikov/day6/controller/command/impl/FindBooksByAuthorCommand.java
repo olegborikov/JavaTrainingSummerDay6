@@ -1,8 +1,8 @@
 package com.borikov.day6.controller.command.impl;
 
 import com.borikov.day6.controller.command.Command;
-import com.borikov.day6.controller.command.impl.constant.DataKeyType;
-import com.borikov.day6.controller.command.impl.constant.ResponseKeyType;
+import com.borikov.day6.controller.command.impl.constant.DataKeyName;
+import com.borikov.day6.controller.command.impl.constant.ResponseKeyName;
 import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.model.service.impl.BookServiceImpl;
 
@@ -17,11 +17,11 @@ public class FindBooksByAuthorCommand implements Command {
         List<Book> filteredBooks = new ArrayList<>();
         if (data != null) {
             BookServiceImpl bookService = new BookServiceImpl();
-            String author = data.get(DataKeyType.AUTHOR);
+            String author = data.get(DataKeyName.AUTHOR);
             filteredBooks = bookService.findBooksByAuthor(author);
         }
         Map<String, List<Book>> response = new HashMap<>();
-        response.put(ResponseKeyType.FILTERED_BOOKS, filteredBooks);
+        response.put(ResponseKeyName.FILTERED_BOOKS, filteredBooks);
         return response;
     }
 } 

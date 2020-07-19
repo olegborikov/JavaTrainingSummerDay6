@@ -1,6 +1,6 @@
 package com.borikov.day6.controller.command.impl.constant;
 
-public class ResponseKeyType {
+public class ResponseKeyName {
     public static final String ADDED_BOOK = "addedBook";
     public static final String ALL_BOOKS = "allBooks";
     public static final String CURRENT_BOOK = "currentBook";
@@ -9,6 +9,6 @@ public class ResponseKeyType {
     public static final String SORTED_BOOKS = "sortedBooks";
     public static final String ERROR = "error";
 
-    private ResponseKeyType() {
+    private ResponseKeyName() {
     }
 }

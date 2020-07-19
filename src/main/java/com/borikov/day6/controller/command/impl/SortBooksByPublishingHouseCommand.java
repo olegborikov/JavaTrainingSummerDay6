@@ -1,7 +1,7 @@
 package com.borikov.day6.controller.command.impl;
 
 import com.borikov.day6.controller.command.Command;
-import com.borikov.day6.controller.command.impl.constant.ResponseKeyType;
+import com.borikov.day6.controller.command.impl.constant.ResponseKeyName;
 import com.borikov.day6.model.entity.Book;
 import com.borikov.day6.model.service.impl.BookServiceImpl;
 
@@ -15,7 +15,7 @@ public class SortBooksByPublishingHouseCommand implements Command {
         BookServiceImpl bookService = new BookServiceImpl();
         List<Book> sortedBooks = bookService.sortBooksByPublishingHouse();
         Map<String, List<Book>> response = new HashMap<>();
-        response.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        response.put(ResponseKeyName.SORTED_BOOKS, sortedBooks);
         return response;
     }
 }

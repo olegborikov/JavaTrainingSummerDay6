@@ -1,7 +1,7 @@
 package test.borikov.day6.controller.command.impl;
 
 import com.borikov.day6.controller.command.impl.FindAllBooksCommand;
-import com.borikov.day6.controller.command.impl.constant.ResponseKeyType;
+import com.borikov.day6.controller.command.impl.constant.ResponseKeyName;
 import com.borikov.day6.exception.StorageException;
 import com.borikov.day6.model.entity.Book;
 import org.testng.annotations.AfterClass;
@@ -45,7 +45,7 @@ public class FindAllBooksCommandTest {
         Map<String, List<Book>> actual = findAllBooksCommand.execute(data);
         List<Book> allBooks = bookStorageCreator.getCreatedBooks();
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put(ResponseKeyType.ALL_BOOKS, allBooks);
+        expected.put(ResponseKeyName.ALL_BOOKS, allBooks);
         assertEquals(actual, expected);
     }
 
@@ -57,7 +57,7 @@ public class FindAllBooksCommandTest {
                 new ArrayList<>(bookStorageCreator.getCreatedBooks());
         allBooks.add(null);
         Map<String, List<Book>> expected = new HashMap<>();
-        expected.put(ResponseKeyType.ALL_BOOKS, allBooks);
+        expected.put(ResponseKeyName.ALL_BOOKS, allBooks);
         assertNotEquals(actual, expected);
     }
 }
