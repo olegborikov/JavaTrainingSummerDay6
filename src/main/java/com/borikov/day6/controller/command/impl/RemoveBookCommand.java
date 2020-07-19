@@ -17,7 +17,7 @@ public class RemoveBookCommand implements Command {
     public Map<String, List<Book>> execute(Map<String, String> data) {
         BookServiceImpl bookService = new BookServiceImpl();
         List<Book> removedBook = new ArrayList<>();
-        String responseKey = ResponseKeyType.ADDED_BOOK;
+        String responseKey = ResponseKeyType.REMOVED_BOOK;
         if (data != null) {
             try {
                 String name = data.get(DataKeyType.NAME);
@@ -29,8 +29,9 @@ public class RemoveBookCommand implements Command {
                     authors.add(data.get(DataKeyType.AUTHOR + authorNumber));
                     authorNumber++;
                 }
-                removedBook = bookService.removeBook(name, publishingYear, publishingHouse, authors);
-            } catch (ServiceException | NumberFormatException e) {
+                removedBook = bookService.removeBook(name, publishingYear,
+                        publishingHouse, authors);
+            } catch (ServiceException e) {
                 responseKey = ResponseKeyType.ERROR;
             }
         }

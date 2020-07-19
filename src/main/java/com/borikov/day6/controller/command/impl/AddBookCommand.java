@@ -29,8 +29,9 @@ public class AddBookCommand implements Command {
                     authors.add(data.get(DataKeyType.AUTHOR + authorNumber));
                     authorNumber++;
                 }
-                addedBook = bookService.addBook(name, publishingYear, publishingHouse, authors);
-            } catch (ServiceException | NumberFormatException e) {
+                addedBook = bookService.addBook(name, publishingYear,
+                        publishingHouse, authors);
+            } catch (ServiceException e) {
                 responseKey = ResponseKeyType.ERROR;
             }
         }

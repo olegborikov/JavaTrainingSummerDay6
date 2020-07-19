@@ -1,8 +1,9 @@
-/*
 package test.borikov.day6.controller;
 
 import com.borikov.day6.controller.BookController;
 import com.borikov.day6.controller.command.impl.constant.DataKeyType;
+import com.borikov.day6.controller.command.impl.constant.ResponseKeyType;
+import com.borikov.day6.exception.StorageException;
 import com.borikov.day6.model.entity.Book;
 import test.borikov.day6.creator.BookStorageCreator;
 import org.testng.annotations.*;
@@ -16,23 +17,26 @@ import static org.testng.Assert.*;
 
 public class BookControllerTest {
     private BookController bookController;
+    private BookStorageCreator bookStorageCreator;
 
     @BeforeClass
-    public void setUpClass() {
+    public void setUpClass() throws StorageException {
         bookController = new BookController();
-        BookStorageCreator.setUpBookStorage();
+        bookStorageCreator = BookStorageCreator.getInstance();
+        bookStorageCreator.setUpBookStorage();
     }
 
     @AfterClass
     public void tearDownClass() {
         bookController = null;
+        bookStorageCreator = null;
     }
 
     @AfterMethod()
-    public void tearDownMethod() {
-        BookStorageCreator.setUpBookStorage();
+    public void tearDownMethod() throws StorageException {
+        bookStorageCreator.setUpBookStorage();
     }
-
+/*
     @DataProvider(name = "processRequestNegativeData")
     public Object[][] createProcessRequestNegativeData() {
         String request1 = "addbook";
@@ -50,8 +54,8 @@ public class BookControllerTest {
 
     @Test(dataProvider = "processRequestNegativeData", enabled = false)
     public void processRequestNegativeTest(String request,
-                                                  Map<String, String> data,
-                                                  Map<String, List<Book>> expected) {
+                                           Map<String, String> data,
+                                           Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
         assertEquals(actual, expected);
     }
@@ -556,6 +560,49 @@ public class BookControllerTest {
                                                      Map<String, List<Book>> expected) {
         Map<String, List<Book>> actual = bookController.processRequest(request, data);
         assertEquals(actual, expected);
+    }*/
+
+    @Test()
+    public void processRequestSortBooksByAuthorsPositiveTest() {
+        String request = "Sort_Books_By_Authors";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        List<Book> sortedBooks = new ArrayList<>();
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(6));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(0));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(2));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(4));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(7));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(8));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(3));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(9));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(1));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(5));
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        assertEquals(actual, expected);
     }
+
+    @Test()
+    public void processRequestSortBooksByAuthorsNegativeTest() {
+        String request = "Sort_Books_By_Authors";
+        Map<String, String> data = new HashMap<>();
+        Map<String, List<Book>> actual = bookController.processRequest(request, data);
+        List<Book> sortedBooks = new ArrayList<>();
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(6));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(0));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(2));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(4));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(7));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(8));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(3));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(9));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(1));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(5));
+        sortedBooks.add(bookStorageCreator.getCreatedBooks().get(5));
+        Map<String, List<Book>> expected = new HashMap<>();
+        expected.put(ResponseKeyType.SORTED_BOOKS, sortedBooks);
+        assertNotEquals(actual, expected);
+    }
+
 }
-*/

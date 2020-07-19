@@ -12,17 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 public class FindBookByIdCommand implements Command {
-
     @Override
     public Map<String, List<Book>> execute(Map<String, String> data) {
-        BookServiceImpl bookService = new BookServiceImpl();
-        List<Book> filteredBook = new ArrayList<>();
+        List<Book> currentBook = new ArrayList<>();
         if (data != null) {
+            BookServiceImpl bookService = new BookServiceImpl();
             String id = data.get(DataKeyType.ID);
-            filteredBook = bookService.findBookById(id);
+            currentBook = bookService.findBookById(id);
         }
         Map<String, List<Book>> response = new HashMap<>();
-        response.put(ResponseKeyType.CURRENT_BOOK, filteredBook);
+        response.put(ResponseKeyType.CURRENT_BOOK, currentBook);
         return response;
     }
 }
